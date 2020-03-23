@@ -4,6 +4,8 @@ defmodule CrawlexirWeb.RegistrationController do
   alias Crawlexir.Auth
   alias Crawlexir.Auth.User
 
+  plug :put_layout, "auth.html"
+
   def new(conn, _params) do
     changeset = Auth.change_user(%User{})
     render(conn, "new.html", changeset: changeset)
