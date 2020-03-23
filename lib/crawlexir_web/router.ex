@@ -15,6 +15,11 @@ defmodule CrawlexirWeb.Router do
 
   scope "/", CrawlexirWeb do
     pipe_through :browser
+
+    resources "/registrations", RegistrationController, only: [:new, :create],
+                                                        singleton: true
+
+    get "/", DashboardController, :index
   end
 
   # Other scopes may use custom stacks.

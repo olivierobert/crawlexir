@@ -1,9 +1,8 @@
 defmodule Crawlexir.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
-  def change do
+  def up do
     execute "CREATE EXTENSION IF NOT EXISTS citext"
-
 
     create table(:users) do
       add :first_name, :string
@@ -14,5 +13,12 @@ defmodule Crawlexir.Repo.Migrations.CreateUsers do
       timestamps()
     end
 
+    create unique_index(:users, [:email])
+  end
+
+  def down do
+    drop table(:users)
+
+    execute "DROP EXTENSION citext"
   end
 end
