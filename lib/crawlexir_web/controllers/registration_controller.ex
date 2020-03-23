@@ -11,7 +11,7 @@ defmodule CrawlexirWeb.RegistrationController do
 
   def create(conn, %{"user" => user_params}) do
     case Auth.create_user(user_params) do
-      {:ok, user} ->
+      {:ok, _} ->
         conn
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: Routes.dashboard_path(conn, :index))

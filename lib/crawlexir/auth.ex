@@ -9,7 +9,7 @@ defmodule Crawlexir.Auth do
   alias Crawlexir.Auth.User
 
   @doc """
-  Gets a single registration.
+  Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.
 

@@ -8,7 +8,7 @@ defmodule Crawlexir.Repo.Migrations.CreateUsers do
       add :first_name, :string
       add :last_name, :string
       add :email, :citext
-      add :password, :string
+      add :encrypted_password, :string
 
       timestamps()
     end
