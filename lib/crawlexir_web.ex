@@ -40,6 +40,7 @@ defmodule CrawlexirWeb do
       use Phoenix.HTML
 
       import CrawlexirWeb.ErrorHelpers
+      import CrawlexirWeb.ViewHelpers
       import CrawlexirWeb.Gettext
       alias CrawlexirWeb.Router.Helpers, as: Routes
     end
