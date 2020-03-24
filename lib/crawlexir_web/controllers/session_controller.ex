@@ -13,8 +13,9 @@ defmodule CrawlexirWeb.SessionController do
     case Auth.login_user(email, password) do
       {:ok, user} ->
         conn
-        |> put_session(:current_user_id, user.id)
         |> put_flash(:success, "Howdy #{user.first_name}}")
+        |> put_session(:current_user_id, user.id)
+        |> configure_session(renew: true)
         |> redirect(to: Routes.dashboard_path(conn, :index))
 
       {:error, _} ->

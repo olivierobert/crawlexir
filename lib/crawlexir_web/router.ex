@@ -1,6 +1,8 @@
 defmodule CrawlexirWeb.Router do
   use CrawlexirWeb, :router
 
+  alias CrawlexirWeb.Plugs;
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -20,6 +22,10 @@ defmodule CrawlexirWeb.Router do
                                                         singleton: true
     resources "/sessions", SessionController, only: [:new, :create],
                                               singleton: true
+  end
+
+  scope "/", CrawlexirWeb do
+    pipe_through [:browser, Plugs.Auth]
 
     get "/", DashboardController, :index
   end
