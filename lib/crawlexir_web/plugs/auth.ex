@@ -6,6 +6,9 @@ defmodule CrawlexirWeb.Plugs.Auth do
 
   def init(default), do: default
 
+  @doc """
+  Redirect non-authenticated users to the sign in page
+  """
   def call(conn, _) do
     case get_session(conn, :current_user_id) do
       nil ->

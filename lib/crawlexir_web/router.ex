@@ -16,16 +16,19 @@ defmodule CrawlexirWeb.Router do
   end
 
   scope "/", CrawlexirWeb do
-    pipe_through :browser
+    pipe_through [:browser, Plugs.Guest]
 
     resources "/registrations", RegistrationController, only: [:new, :create],
                                                         singleton: true
-    resources "/sessions", SessionController, only: [:new, :create, :delete],
+    resources "/sessions", SessionController, only: [:new, :create],
                                               singleton: true
   end
 
   scope "/", CrawlexirWeb do
     pipe_through [:browser, Plugs.Auth]
+
+    resources "/sessions", SessionController, only: [:delete],
+                                              singleton: true
 
     get "/", DashboardController, :index
   end
