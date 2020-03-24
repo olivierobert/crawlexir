@@ -7,5 +7,7 @@ defmodule CrawlexirWeb.UploadController do
 
   def create(conn, %{"upload" => upload_params}) do
     conn
+      |> put_flash(:info, "File uploaded successfully. Keywords are now being processed.")
+      |> redirect(to: Routes.dashboard_path(conn, :index))
   end
 end
