@@ -11,7 +11,7 @@ defmodule Crawlexir.Auth do
   @doc """
   Gets a single user.
 
-  Raises `Ecto.NoResultsError` if the User does not exist.
+  Raises `Ecto.NoResultsError` if the user does not exist.
 
   ## Examples
 
@@ -43,7 +43,35 @@ defmodule Crawlexir.Auth do
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking registration changes.
+  Authenticate a user with provided credentials.
+
+  ## Examples
+
+      iex> login_user(valid_email, valid_password)
+      {:ok, %User{}}
+
+      iex> login_user(valid_email, invalid_password)
+      {:error, :unauthorized}
+
+  """
+  def login_user(email, password) do
+    user_query = from u in User, where: u.email == ^email
+
+    case Repo.one(user_query) do
+      %User{} = user -> authenticate_user(user, password)
+      nil -> {:error, :unauthorized}
+    end
+  end
+
+  defp authenticate_user(user, password) do
+    case Crawlexir.Auth.Password.validate_password(user, password) do
+      {:ok, %User{} = user } -> {:ok, user}
+      {:error, "invalid password"} -> {:error, :unauthorized}
+    end
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user changes.
 
   ## Examples
 

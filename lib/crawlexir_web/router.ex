@@ -18,6 +18,8 @@ defmodule CrawlexirWeb.Router do
 
     resources "/registrations", RegistrationController, only: [:new, :create],
                                                         singleton: true
+    resources "/sessions", SessionController, only: [:new, :create],
+                                              singleton: true
 
     get "/", DashboardController, :index
   end

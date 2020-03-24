@@ -1,15 +1,8 @@
 defmodule CrawlexirWeb.RegistrationControllerTest do
   use CrawlexirWeb.ConnCase
 
-  alias Crawlexir.Auth
-
   @create_attrs %{email: "jean@bon.com", first_name: "Jean", last_name: "Bon", password: "12345678"}
   @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil}
-
-  def fixture(:user) do
-    {:ok, user} = Auth.create_user(@create_attrs)
-    user
-  end
 
   describe "new registration" do
     test "renders form", %{conn: conn} do
