@@ -4,14 +4,14 @@ defmodule CrawlexirWeb.RegistrationControllerTest do
   @create_attrs %{email: "jean@bon.com", first_name: "Jean", last_name: "Bon", password: "12345678"}
   @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil}
 
-  describe "new registration" do
+  describe "#new" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.registration_path(conn, :new))
       assert html_response(conn, 200) =~ "Sign up"
     end
   end
 
-  describe "create a new user" do
+  describe "#create" do
     test "given valid attributes, it redirects to the dashboard", %{conn: conn} do
       conn = post(conn, Routes.registration_path(conn, :create), user: @create_attrs)
 
