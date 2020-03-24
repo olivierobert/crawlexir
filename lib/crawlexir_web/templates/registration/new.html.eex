@@ -26,4 +26,6 @@
   <div>
     <%= submit "Sign Up" %>
   </div>
+
+  <p>Already have an account, <%= link "Sign In", to: Routes.session_path(@conn, :new) %>.</p>
 <% end %>
