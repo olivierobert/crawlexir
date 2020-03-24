@@ -2,13 +2,11 @@ defmodule CrawlexirWeb.SessionController do
   use CrawlexirWeb, :controller
 
   alias Crawlexir.Auth
-  alias Crawlexir.Auth.User
 
   plug :put_layout, "auth.html"
 
   def new(conn, _params) do
-    changeset = Auth.change_user(%User{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html")
   end
 
   def create(conn, %{"email" => email, "password" => password}) do
