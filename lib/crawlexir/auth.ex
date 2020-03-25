@@ -7,6 +7,7 @@ defmodule Crawlexir.Auth do
   alias Crawlexir.Repo
 
   alias Crawlexir.Auth.User
+  alias Crawlexir.Auth.Password
 
   @doc """
   Gets a single user.
@@ -64,7 +65,7 @@ defmodule Crawlexir.Auth do
   end
 
   defp authenticate_user(user, password) do
-    case Crawlexir.Auth.Password.validate_password(user, password) do
+    case Password.validate_password(user, password) do
       {:ok, %User{} = user } -> {:ok, user}
       {:error, "invalid password"} -> {:error, :unauthorized}
     end
