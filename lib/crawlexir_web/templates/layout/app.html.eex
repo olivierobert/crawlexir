@@ -3,7 +3,7 @@
   <head>
     <%= render CrawlexirWeb.SharedView, "head.html", assigns %>
   </head>
-  <body>
+  <body class="<%= body_class(@conn) %>">
     <main role="main" class="container">
       <%= render CrawlexirWeb.SharedView, "app_header.html", assigns %>
 

@@ -1,5 +1,8 @@
 <header class="app-header">
   <div class="app-header__action">
+    <%= link "Upload Keywords", to: Routes.upload_path(@conn, :new) %>
+  </div>
+  <div class="app-header__user">
     <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete], fn _ ->%>
       <div class="form-group">
         <%= submit "logout" %>
