@@ -13,9 +13,11 @@ defmodule CrawlexirWeb.RegistrationController do
 
   def create(conn, %{"user" => user_params}) do
     case Auth.create_user(user_params) do
-      {:ok, _} ->
+      {:ok, user} ->
         conn
         |> put_flash(:info, "User created successfully.")
+        |> put_session(:current_user_id, user.id)
+        |> configure_session(renew: true)
         |> redirect(to: Routes.dashboard_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -1,0 +1,9 @@
+<header class="app-header">
+  <div class="app-header__action">
+    <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete], fn _ ->%>
+      <div class="form-group">
+        <%= submit "logout" %>
+      </div>
+    <% end %>
+  </div>
+</header>

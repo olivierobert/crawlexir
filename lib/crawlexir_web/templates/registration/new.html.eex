@@ -20,10 +20,12 @@
   <%= error_tag f, :last_name %>
 
   <%= label f, :password %>
-  <%= text_input f, :password %>
+  <%= password_input f, :password %>
   <%= error_tag f, :password %>
 
   <div>
     <%= submit "Sign Up" %>
   </div>
+
+  <p>Already have an account, <%= link "Sign In", to: Routes.session_path(@conn, :new) %>.</p>
 <% end %>
