@@ -1,8 +1,9 @@
 <%= form_for @conn, Routes.upload_path(@conn, :create), [multipart: true, as: :upload], fn f -> %>
   <div class="form-group">
-    <%= label f, :csv_file %>
+    <%= label f, :csv_file, "CSV File" %>
     <%= file_input f, :csv_file  %>
   </div>
+  <small>Use <%= link "this template", to: Routes.static_path(@conn, "/csv/template.csv") %> to upload keywords with the correct format </small>
 
   <div class="form-group">
     <%= submit "Upload" %>
