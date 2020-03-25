@@ -1,6 +1,7 @@
 defmodule CrawlexirWeb.UploadController do
   use CrawlexirWeb, :controller
 
+  alias Crawlexir.Search
   alias Crawlexir.Search.Csv
 
   def new(conn, _) do
@@ -10,6 +11,9 @@ defmodule CrawlexirWeb.UploadController do
   def create(conn, %{"upload" => %{ "csv_file" => file }}) do
     case parse_keyword_from(file) do
       {:ok, keyword_list} ->
+        keyword_list
+        |> Enum.each(fn keyword -> Search.create_keyword(conn.assigns.current_user, %{keyword: keyword}) end)
+
         conn
         |> put_flash(:info, "File uploaded successfully. Keywords are now being processed.")
         |> redirect(to: Routes.dashboard_path(conn, :index))

@@ -2,6 +2,8 @@ defmodule CrawlexirWeb.UploadControllerTest do
   use CrawlexirWeb.ConnCase
   use CrawlexirWeb.ControllerCase
 
+  alias Crawlexir.Search;
+
   describe "#new" do
     test "renders form", %{conn: conn} do
       conn =
@@ -21,6 +23,19 @@ defmodule CrawlexirWeb.UploadControllerTest do
 
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
       assert get_flash(conn, :info) =~ "File uploaded successfully"
+    end
+
+    test "given a valid file, it save the keywords", %{conn: conn} do
+      csv_upload = %Plug.Upload{path: "test/fixtures/assets/valid-keyword.csv", filename: "valid-keyword.csv"}
+      conn =
+        authenticated_conn()
+        |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
+
+      keywords = Search.list_keywords()
+
+      assert length(keywords) == 2
+      assert List.first(keywords).keyword == "first_keyword"
+      assert List.last(keywords).keyword == "second_keyword"
     end
 
     test "given an invalid file, it shows an error", %{conn: conn} do
