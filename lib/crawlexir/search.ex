@@ -46,10 +46,10 @@ defmodule Crawlexir.Search do
 
   ## Examples
 
-      iex> create_keyword(%{user}, %{field: value})
+      iex> create_keyword(%User{}, %{field: value})
       {:ok, %Keyword{}}
 
-      iex> create_keyword((%{user}, %{field: bad_value})
+      iex> create_keyword((%User{}, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
@@ -65,11 +65,11 @@ defmodule Crawlexir.Search do
 
   ## Examples
 
-      iex> search_for_keyword(%{user}, %{field: value})
-      {:ok, %Keyword{}}
+      iex> search_for_keyword(%User{}, %{field: value})
+      {:ok, %{keyword: %Keyword{}, worker: %Oban.job{}}
 
-      iex> search_for_keyword((%{user}, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      iex> search_for_keyword((%User{}, %{field: bad_value})
+      {:error, :keyword, reason, _}
 
   """
   def search_for_keyword(%User{} = user, attrs \\ %{}) do
