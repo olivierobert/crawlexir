@@ -24,14 +24,6 @@ defmodule Crawlexir.AuthTest do
       assert user.last_name == "Bon"
     end
 
-    test "create_user/1 with valid password encrypts it" do
-      user_attributes = %{email: "jean@bon.com", first_name: "Jean", last_name: "Bon", password: "12345678"}
-
-      {:ok, user} = Auth.create_user(user_attributes)
-
-      assert user.encrypted_password !== "12345678"
-    end
-
     test "create_user/1 with invalid data returns error changeset" do
       invalid_attrs = %{email: nil, first_name: nil, last_name: nil, password: nil }
 

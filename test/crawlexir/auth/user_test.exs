@@ -39,4 +39,13 @@ defmodule Crawlexir.Auth.UserTest do
       assert %{email: ["has already been taken"]} = errors_on(changeset)
     end
   end
+
+  test "password is encrypted into the field encrypted password" do
+    attributes  = %{@valid_attributes | password: "encryptme"}
+
+    changeset = User.changeset(%User{}, @valid_attributes)
+
+    assert changeset.changes[:encrypted_password] !== nil
+    assert changeset.changes[:encrypted_password] !== "encryptme"
+  end
 end
