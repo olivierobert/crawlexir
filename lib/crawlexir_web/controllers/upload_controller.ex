@@ -7,11 +7,13 @@ defmodule CrawlexirWeb.UploadController do
     render(conn, "new.html")
   end
 
-  def create(conn, %{"upload" => %{ "csv_file" => file }}) do
+  def create(conn, %{"upload" => %{"csv_file" => file}}) do
     case parse_keyword_from(file) do
       {:ok, keyword_list} ->
         keyword_list
-        |> Enum.each(fn keyword -> Search.create_keyword(conn.assigns.current_user, %{keyword: keyword}) end)
+        |> Enum.each(fn keyword ->
+          Search.search_for_keyword(conn.assigns.current_user, %{keyword: keyword})
+        end)
 
         conn
         |> put_flash(:info, "File uploaded successfully. Keywords are now being processed.")
@@ -19,7 +21,10 @@ defmodule CrawlexirWeb.UploadController do
 
       {:error, _} ->
         conn
-        |> put_flash(:error, "No valid keyword found in the submitted file. Make sure to use the provided template.")
+        |> put_flash(
+          :error,
+          "No valid keyword found in the submitted file. Make sure to use the provided template."
+        )
         |> redirect(to: Routes.upload_path(conn, :new))
     end
   end
@@ -31,6 +36,6 @@ defmodule CrawlexirWeb.UploadController do
   end
 
   defp parse_keyword_from(file) do
-    file.path |> Search.parse_keyword_file
+    file.path |> Search.parse_keyword_file()
   end
 end
