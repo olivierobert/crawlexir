@@ -1,5 +1,5 @@
 defmodule Crawlexir.Auth.UserTest do
-  use Crawlexir.DataCase
+  use Crawlexir.DataCase, async: true
 
   alias Crawlexir.Auth
   alias Crawlexir.Auth.User

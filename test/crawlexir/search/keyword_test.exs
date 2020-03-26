@@ -1,5 +1,5 @@
 defmodule Crawlexir.Search.KeywordTest do
-  use Crawlexir.DataCase
+  use Crawlexir.DataCase, async: true
 
   alias Crawlexir.Search.Keyword
 
