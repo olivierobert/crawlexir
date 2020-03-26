@@ -38,6 +38,7 @@ defmodule Crawlexir.MixProject do
       {:ecto_sql, "~> 3.1"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:oban, "~> 1.2"},
       {:phoenix, "~> 1.4.16"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
