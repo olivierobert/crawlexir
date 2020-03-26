@@ -2,7 +2,7 @@ defmodule CrawlexirWeb.UploadControllerTest do
   use CrawlexirWeb.ConnCase
   use CrawlexirWeb.ControllerCase
 
-  alias Crawlexir.Search;
+  alias Crawlexir.Search
 
   describe "#new" do
     test "renders form", %{conn: conn} do
@@ -16,7 +16,11 @@ defmodule CrawlexirWeb.UploadControllerTest do
 
   describe "#create" do
     test "given a valid file, it redirects to the dashboard", %{conn: conn} do
-      csv_upload = %Plug.Upload{path: "test/fixtures/assets/valid-keyword.csv", filename: "valid-keyword.csv"}
+      csv_upload = %Plug.Upload{
+        path: "test/fixtures/assets/valid-keyword.csv",
+        filename: "valid-keyword.csv"
+      }
+
       conn =
         authenticated_conn()
         |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
@@ -26,7 +30,10 @@ defmodule CrawlexirWeb.UploadControllerTest do
     end
 
     test "given a valid file, it save the keywords", %{conn: conn} do
-      csv_upload = %Plug.Upload{path: "test/fixtures/assets/valid-keyword.csv", filename: "valid-keyword.csv"}
+      csv_upload = %Plug.Upload{
+        path: "test/fixtures/assets/valid-keyword.csv",
+        filename: "valid-keyword.csv"
+      }
 
       authenticated_conn()
       |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
@@ -39,7 +46,11 @@ defmodule CrawlexirWeb.UploadControllerTest do
     end
 
     test "given an invalid file, it shows an error", %{conn: conn} do
-      csv_upload = %Plug.Upload{path: "test/fixtures/assets/invalid-keyword.csv", filename: "invalid-keyword.csv"}
+      csv_upload = %Plug.Upload{
+        path: "test/fixtures/assets/invalid-keyword.csv",
+        filename: "invalid-keyword.csv"
+      }
+
       conn =
         authenticated_conn()
         |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
