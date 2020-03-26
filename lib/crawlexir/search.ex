@@ -6,7 +6,9 @@ defmodule Crawlexir.Search do
   import Ecto.Query, warn: false
   alias Crawlexir.Repo
 
+  alias Crawlexir.Search.Csv
   alias Crawlexir.Search.Keyword
+
   alias Crawlexir.Auth.User
 
   @doc """
@@ -86,5 +88,21 @@ defmodule Crawlexir.Search do
   """
   def change_keyword(%Keyword{} = keyword) do
     Keyword.changeset(keyword, %{})
+  end
+
+  @doc """
+  Parse keywords list from a CSV file.
+  Parsing relies on the provided template stored in "/static/csv/template.csv"
+
+  ## Examples
+
+      iex> "./assets/static/csv/template.csv"
+      iex> |> Path.expand(__DIR__)
+      iex> |> Crawlexir.Search.parse_keyword_file
+      {:ok, ["first_keyword", "second_keyword"]}
+
+  """
+  def parse_keyword_file(file) do
+    Csv.parse(file)
   end
 end

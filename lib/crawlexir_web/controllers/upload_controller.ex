@@ -2,7 +2,6 @@ defmodule CrawlexirWeb.UploadController do
   use CrawlexirWeb, :controller
 
   alias Crawlexir.Search
-  alias Crawlexir.Search.Csv
 
   def new(conn, _) do
     render(conn, "new.html")
@@ -33,6 +32,6 @@ defmodule CrawlexirWeb.UploadController do
   end
 
   defp parse_keyword_from(file) do
-    keywords = file.path |> Csv.parse
+    keywords = file.path |> Search.parse_keyword_file
   end
 end

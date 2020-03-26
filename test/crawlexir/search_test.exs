@@ -65,5 +65,13 @@ defmodule Crawlexir.SearchTest do
       keyword = keyword_fixture()
       assert %Ecto.Changeset{} = Search.change_keyword(keyword)
     end
+
+    test "parse_keyword_file/1 with a valid CSV file returns a list of keyword" do
+      valid_file = Path.expand("../fixtures/assets/valid-keyword.csv", __DIR__)
+
+      parsed_result = Search.parse_keyword_file(valid_file)
+
+      assert parsed_result == {:ok, ["first_keyword", "second_keyword"]}
+    end
   end
 end
