@@ -31,6 +31,6 @@ defmodule CrawlexirWeb.UploadController do
   end
 
   defp parse_keyword_from(file) do
-    keywords = file.path |> Search.parse_keyword_file
+    file.path |> Search.parse_keyword_file
   end
 end
