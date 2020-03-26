@@ -23,19 +23,16 @@ defmodule Crawlexir.Auth.User do
     user
     |> cast(attrs, [:email, :first_name, :last_name, :password])
     |> validate_required([:email, :first_name, :last_name, :password])
+    |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)
     |> unique_constraint(:email)
     |> encrypt_password
   end
 
-  defp encrypt_password(changeset) do
-    password = get_change(changeset, :password)
-
-    if password do
-      encrypted_password = Password.hash_password(password)
-      put_change(changeset, :encrypted_password, encrypted_password)
-    else
-      changeset
-    end
+  defp encrypt_password(%Ecto.Changeset{changes: %{password: password}} = changeset) do
+    encrypted_password = Password.hash_password(password)
+    put_change(changeset, :encrypted_password, encrypted_password)
   end
+
+  defp encrypt_password(changeset), do: changeset
 end
