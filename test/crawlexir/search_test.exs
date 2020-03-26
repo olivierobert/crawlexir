@@ -1,8 +1,10 @@
 defmodule Crawlexir.SearchTest do
   use Crawlexir.DataCase
+  use Oban.Testing, repo: Crawlexir.Repo
 
   alias Crawlexir.Auth
   alias Crawlexir.Search
+  alias Crawlexir.Search.ScraperWorker
 
   describe "keywords" do
     alias Crawlexir.Search.Keyword
@@ -75,18 +77,21 @@ defmodule Crawlexir.SearchTest do
 
     test "update_keyword/2 with valid data updates the keyword" do
       keyword = keyword_fixture()
+
       assert {:ok, %Keyword{} = keyword} = Search.update_keyword(keyword, @update_attrs)
       assert keyword.keyword == "some updated keyword"
     end
 
     test "update_keyword/2 with invalid data returns error changeset" do
       keyword = keyword_fixture()
+
       assert {:error, %Ecto.Changeset{}} = Search.update_keyword(keyword, @invalid_attrs)
       assert keyword == Search.get_keyword!(keyword.id)
     end
 
     test "change_keyword/1 returns a keyword changeset" do
       keyword = keyword_fixture()
+
       assert %Ecto.Changeset{} = Search.change_keyword(keyword)
     end
 

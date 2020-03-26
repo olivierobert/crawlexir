@@ -19,9 +19,9 @@ config :crawlexir, CrawlexirWeb.Endpoint,
   live_view: [signing_salt: "9NhrdwT2"]
 
 config :crawlexir, Oban,
- repo: Crawlexir.Repo,
- prune: {:maxlen, 10_000},
- queues: [default: 20]
+  repo: Crawlexir.Repo,
+  prune: {:maxlen, 10_000},
+  queues: [default: 20]
 
 # Configures Elixir's Logger
 config :logger, :console,

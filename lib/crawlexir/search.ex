@@ -8,6 +8,7 @@ defmodule Crawlexir.Search do
 
   alias Crawlexir.Search.Csv
   alias Crawlexir.Search.Keyword
+  alias Crawlexir.Search.ScraperWorker
 
   alias Crawlexir.Auth.User
 

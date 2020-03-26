@@ -15,10 +15,10 @@ config :crawlexir, CrawlexirWeb.Endpoint,
   server: false
 
 config :crawlexir, Oban,
- repo: Crawlexir.Repo,
- crontab: false,
- queues: false,
- prune: :disabled
+  repo: Crawlexir.Repo,
+  crontab: false,
+  queues: false,
+  prune: :disabled
 
 # Print only warnings and errors during test
 config :logger, level: :warn

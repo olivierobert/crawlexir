@@ -1,7 +1,7 @@
 defmodule CrawlexirWeb.Router do
   use CrawlexirWeb, :router
 
-  alias CrawlexirWeb.Plugs;
+  alias CrawlexirWeb.Plugs
 
   pipeline :browser do
     plug :accepts, ["html"]
