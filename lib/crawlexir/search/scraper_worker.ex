@@ -4,8 +4,8 @@ defmodule Crawlexir.Search.ScraperWorker do
   alias Crawlexir.Search
 
   @impl Oban.Worker
-  def perform(%{"id" => id} = args, _job) do
-    keyword = Search.get_keyword!(id)
+  def perform(%{"id" => keyword_id} = args, _job) do
+    keyword = Search.get_keyword!(keyword_id)
 
     :ok
   end
