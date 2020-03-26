@@ -20,7 +20,13 @@ defmodule Crawlexir.SearchTest do
     end
 
     def user_fixture() do
-      user_attributes = %{email: "jean@bon.com", first_name: "Jean", last_name: "Bon", password: "12345678"}
+      user_attributes = %{
+        email: "jean@bon.com",
+        first_name: "Jean",
+        last_name: "Bon",
+        password: "12345678"
+      }
+
       {:ok, user} = Auth.create_user(user_attributes)
 
       user
@@ -47,6 +53,24 @@ defmodule Crawlexir.SearchTest do
       user = user_fixture()
 
       assert {:error, %Ecto.Changeset{}} = Search.create_keyword(user, @invalid_attrs)
+    end
+
+    test "search_for_keyword/1 with valid data creates a keyword" do
+      user = user_fixture()
+
+      assert {:ok, %{keyword: keyword, worker: _job}} =
+               Search.search_for_keyword(user, @valid_attrs)
+
+      assert keyword.keyword == "some keyword"
+    end
+
+    test "search_for_keyword/1 with valid data triggers a scraper worker" do
+      user = user_fixture()
+
+      assert {:ok, %{keyword: keyword, worker: _job}} =
+               Search.search_for_keyword(user, @valid_attrs)
+
+      assert_enqueued(worker: ScraperWorker, args: %{id: keyword.id})
     end
 
     test "update_keyword/2 with valid data updates the keyword" do
