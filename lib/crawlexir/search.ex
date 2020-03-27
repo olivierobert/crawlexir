@@ -8,6 +8,7 @@ defmodule Crawlexir.Search do
 
   alias Crawlexir.Search.Csv
   alias Crawlexir.Search.Keyword
+  alias Crawlexir.Search.ScraperWorker
 
   alias Crawlexir.Auth.User
 
@@ -45,10 +46,10 @@ defmodule Crawlexir.Search do
 
   ## Examples
 
-      iex> create_keyword(%{user}, %{field: value})
+      iex> create_keyword(%User{}, %{field: value})
       {:ok, %Keyword{}}
 
-      iex> create_keyword((%{user}, %{field: bad_value})
+      iex> create_keyword((%User{}, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
@@ -57,6 +58,27 @@ defmodule Crawlexir.Search do
     |> Keyword.changeset(attrs)
     |> Ecto.Changeset.put_change(:user_id, user.id)
     |> Repo.insert()
+  end
+
+  @doc """
+  Creates a keyword and schedule a background job to generate scraping results.
+
+  ## Examples
+
+      iex> search_for_keyword(%User{}, %{field: value})
+      {:ok, %{keyword: %Keyword{}, worker: %Oban.job{}}
+
+      iex> search_for_keyword((%User{}, %{field: bad_value})
+      {:error, :keyword, reason, _}
+
+  """
+  def search_for_keyword(%User{} = user, attrs \\ %{}) do
+    Ecto.Multi.new()
+    |> Ecto.Multi.run(:keyword, fn _, _ -> create_keyword(user, attrs) end)
+    |> Ecto.Multi.run(:worker, fn _, %{keyword: keyword} ->
+      scrap_results_for_keyword(keyword.id)
+    end)
+    |> Repo.transaction()
   end
 
   @doc """
@@ -104,5 +126,11 @@ defmodule Crawlexir.Search do
   """
   def parse_keyword_file(file) do
     Csv.parse(file)
+  end
+
+  defp scrap_results_for_keyword(keyword_id) do
+    %{id: keyword_id}
+    |> ScraperWorker.new()
+    |> Oban.insert()
   end
 end

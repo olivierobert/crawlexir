@@ -1,8 +1,10 @@
 defmodule Crawlexir.SearchTest do
   use Crawlexir.DataCase
+  use Oban.Testing, repo: Crawlexir.Repo
 
   alias Crawlexir.Auth
   alias Crawlexir.Search
+  alias Crawlexir.Search.ScraperWorker
 
   describe "keywords" do
     alias Crawlexir.Search.Keyword
@@ -20,7 +22,13 @@ defmodule Crawlexir.SearchTest do
     end
 
     def user_fixture() do
-      user_attributes = %{email: "jean@bon.com", first_name: "Jean", last_name: "Bon", password: "12345678"}
+      user_attributes = %{
+        email: "jean@bon.com",
+        first_name: "Jean",
+        last_name: "Bon",
+        password: "12345678"
+      }
+
       {:ok, user} = Auth.create_user(user_attributes)
 
       user
@@ -49,20 +57,41 @@ defmodule Crawlexir.SearchTest do
       assert {:error, %Ecto.Changeset{}} = Search.create_keyword(user, @invalid_attrs)
     end
 
+    test "search_for_keyword/1 with valid data creates a keyword" do
+      user = user_fixture()
+
+      assert {:ok, %{keyword: keyword, worker: _job}} =
+               Search.search_for_keyword(user, @valid_attrs)
+
+      assert keyword.keyword == "some keyword"
+    end
+
+    test "search_for_keyword/1 with valid data triggers a scraper worker" do
+      user = user_fixture()
+
+      assert {:ok, %{keyword: keyword, worker: _job}} =
+               Search.search_for_keyword(user, @valid_attrs)
+
+      assert_enqueued(worker: ScraperWorker, args: %{id: keyword.id})
+    end
+
     test "update_keyword/2 with valid data updates the keyword" do
       keyword = keyword_fixture()
+
       assert {:ok, %Keyword{} = keyword} = Search.update_keyword(keyword, @update_attrs)
       assert keyword.keyword == "some updated keyword"
     end
 
     test "update_keyword/2 with invalid data returns error changeset" do
       keyword = keyword_fixture()
+
       assert {:error, %Ecto.Changeset{}} = Search.update_keyword(keyword, @invalid_attrs)
       assert keyword == Search.get_keyword!(keyword.id)
     end
 
     test "change_keyword/1 returns a keyword changeset" do
       keyword = keyword_fixture()
+
       assert %Ecto.Changeset{} = Search.change_keyword(keyword)
     end
 

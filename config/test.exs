@@ -14,5 +14,11 @@ config :crawlexir, CrawlexirWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :crawlexir, Oban,
+  repo: Crawlexir.Repo,
+  crontab: false,
+  queues: false,
+  prune: :disabled
+
 # Print only warnings and errors during test
 config :logger, level: :warn
