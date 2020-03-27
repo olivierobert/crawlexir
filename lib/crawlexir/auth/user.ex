@@ -3,6 +3,7 @@ defmodule Crawlexir.Auth.User do
   import Ecto.Changeset
 
   alias Crawlexir.Auth.Password
+  alias Crawlexir.Search.Keyword
 
   schema "users" do
     field :email, :string
@@ -11,6 +12,8 @@ defmodule Crawlexir.Auth.User do
     field :encrypted_password, :string
 
     field :password, :string, virtual: true
+
+    has_many :keywords, Keyword
 
     timestamps()
   end

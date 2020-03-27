@@ -30,7 +30,8 @@ defmodule CrawlexirWeb.Router do
     resources "/sessions", SessionController, only: [:delete],
                                               singleton: true
 
-    resources "/uploads", UploadController, only: [:new, :create]
+    resources "/uploads", UploadController, only: [:new, :create],
+                                            singleton: true
 
     get "/", DashboardController, :index
   end
