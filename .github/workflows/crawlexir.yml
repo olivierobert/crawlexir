@@ -23,5 +23,7 @@ jobs:
           otp-version: 22.2
       - name: Install Dependencies
         run: mix deps.get
+      - name: Run Linter
+        run: mix format --check-formatted
       - name: Run Tests
         run: mix test
