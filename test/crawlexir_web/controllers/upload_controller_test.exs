@@ -27,9 +27,9 @@ defmodule CrawlexirWeb.UploadControllerTest do
 
     test "given a valid file, it save the keywords", %{conn: conn} do
       csv_upload = %Plug.Upload{path: "test/fixtures/assets/valid-keyword.csv", filename: "valid-keyword.csv"}
-      conn =
-        authenticated_conn()
-        |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
+
+      authenticated_conn()
+      |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
 
       keywords = Search.list_keywords()
 

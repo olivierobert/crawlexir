@@ -22,7 +22,6 @@ defmodule CrawlexirWeb.UploadController do
         |> put_flash(:error, "No valid keyword found in the submitted file. Make sure to use the provided template.")
         |> redirect(to: Routes.upload_path(conn, :new))
     end
-
   end
 
   def create(conn, _params) do
@@ -32,6 +31,6 @@ defmodule CrawlexirWeb.UploadController do
   end
 
   defp parse_keyword_from(file) do
-    keywords = file.path |> Search.parse_keyword_file
+    file.path |> Search.parse_keyword_file
   end
 end

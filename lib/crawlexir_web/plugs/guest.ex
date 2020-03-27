@@ -2,8 +2,6 @@ defmodule CrawlexirWeb.Plugs.Guest do
   import Plug.Conn
   import Phoenix.Controller
 
-  alias Crawlexir.Auth.User
-
   def init(default), do: default
 
   @doc """
