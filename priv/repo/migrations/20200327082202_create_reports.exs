@@ -8,7 +8,7 @@ defmodule Crawlexir.Repo.Migrations.CreateReports do
       add :search_result_link_count, :integer
       add :search_result_url_list, {:array, :string}
       add :link_count, :integer
-      add :html_content, :string
+      add :html_content, :text
       add :keyword_id, references(:keywords, on_delete: :delete_all)
 
       timestamps()

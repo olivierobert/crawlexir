@@ -8,6 +8,7 @@ defmodule Crawlexir.Search do
 
   alias Crawlexir.Search.Csv
   alias Crawlexir.Search.Keyword
+  alias Crawlexir.Search.Report
   alias Crawlexir.Search.ScraperWorker
 
   alias Crawlexir.Auth.User
@@ -126,6 +127,26 @@ defmodule Crawlexir.Search do
   """
   def parse_keyword_file(file) do
     Csv.parse(file)
+  end
+
+  @doc """
+  Creates a scrapping report for a keyword.
+
+  ## Examples
+
+      iex> create_keyword_report(%Keyword{}, %{field: value})
+      {:ok, %Keyword{}}
+
+      iex> create_keyword((%Keyword{}, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_keyword_report(keyword_id, attrs \\ %{}) do
+    #  def create_keyword_report(%Keyword{} = keyword, attrs \\ %{}) do
+    %Report{}
+    |> Report.changeset(attrs)
+    |> Ecto.Changeset.put_change(:keyword_id, keyword_id)
+    |> Repo.insert()
   end
 
   defp scrap_results_for_keyword(keyword_id) do

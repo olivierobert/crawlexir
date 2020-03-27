@@ -3,11 +3,13 @@ defmodule Crawlexir.Search.Keyword do
   import Ecto.Changeset
 
   alias Crawlexir.Auth.User
+  alias Crawlexir.Search.Report
 
   schema "keywords" do
     field :keyword, :string
 
     belongs_to :user, User
+    has_one :report, Report
 
     timestamps()
   end
