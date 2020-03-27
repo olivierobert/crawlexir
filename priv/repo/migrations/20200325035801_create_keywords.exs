@@ -4,8 +4,7 @@ defmodule Crawlexir.Repo.Migrations.CreateKeywords do
   def change do
     create table(:keywords) do
       add :keyword, :string
-      add :user_id, references(:users, on_delete: :delete_all),
-                    null: false
+      add :user_id, references(:users, on_delete: :delete_all), null: false
 
       timestamps()
     end

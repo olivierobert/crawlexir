@@ -1,5 +1,4 @@
 defmodule Crawlexir.Search.Csv do
-
   @max_keyword_count 100
   @template_header "keyword"
 
