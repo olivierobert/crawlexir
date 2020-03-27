@@ -66,7 +66,7 @@ defmodule Crawlexir.Auth do
 
   defp authenticate_user(user, password) do
     case Password.validate_password(user, password) do
-      {:ok, %User{} = user } -> {:ok, user}
+      {:ok, %User{} = user} -> {:ok, user}
       {:error, "invalid password"} -> {:error, :unauthorized}
     end
   end

@@ -5,7 +5,13 @@ defmodule CrawlexirWeb.GuestPlugTest do
   alias Crawlexir.Auth
 
   test "given current_user_id is assigned, it redirects a user" do
-    user_attributes = %{email: "jean@bon.com", first_name: "Jean", last_name: "Bon", password: "12345678"}
+    user_attributes = %{
+      email: "jean@bon.com",
+      first_name: "Jean",
+      last_name: "Bon",
+      password: "12345678"
+    }
+
     {:ok, user} = Auth.create_user(user_attributes)
 
     conn =

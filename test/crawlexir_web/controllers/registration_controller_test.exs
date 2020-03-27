@@ -1,7 +1,12 @@
 defmodule CrawlexirWeb.RegistrationControllerTest do
   use CrawlexirWeb.ConnCase
 
-  @create_attrs %{email: "jean@bon.com", first_name: "Jean", last_name: "Bon", password: "12345678"}
+  @create_attrs %{
+    email: "jean@bon.com",
+    first_name: "Jean",
+    last_name: "Bon",
+    password: "12345678"
+  }
   @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil}
 
   describe "#new" do
@@ -23,7 +28,9 @@ defmodule CrawlexirWeb.RegistrationControllerTest do
 
     test "given invalid attributes, it renders errors", %{conn: conn} do
       conn = post(conn, Routes.registration_path(conn, :create), user: @invalid_attrs)
-      assert html_response(conn, 200) =~ "Oops, something went wrong! Please check the errors below."
+
+      assert html_response(conn, 200) =~
+               "Oops, something went wrong! Please check the errors below."
     end
   end
 end
