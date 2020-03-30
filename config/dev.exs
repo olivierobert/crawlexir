@@ -1,5 +1,8 @@
 use Mix.Config
 
+config :crawlexir,
+  google_request: Crawlexir.Google.RequestMock
+
 # Configure your database
 config :crawlexir, Crawlexir.Repo,
   username: "postgres",
