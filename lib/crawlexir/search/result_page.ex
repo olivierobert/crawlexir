@@ -30,8 +30,6 @@ defmodule Crawlexir.Search.ResultPage do
   def new(body) do
     parsed_body = Floki.parse_document!(body)
 
-    debug(body)
-
     {:ok,
      %ResultPage{
        advertising_content: get_advertising_content(parsed_body),
@@ -70,9 +68,7 @@ defmodule Crawlexir.Search.ResultPage do
     %{link_count: length(links)}
   end
 
-  @doc """
-  Remove any non-UTF8 characters from the HTML body.
-  """
+  # Remove any non-UTF8 characters from the HTML body.
   defp cleanup_html(body) do
     body
     |> String.chunk(:printable)

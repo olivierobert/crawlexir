@@ -1,5 +1,5 @@
 defmodule Crawlexir.FactoryBase do
-  defmacro __using__(options) do
+  defmacro __using__(_) do
     quote do
       @doc """
       Returns a Struct for a given factory.

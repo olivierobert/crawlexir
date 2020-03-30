@@ -14,7 +14,7 @@ defmodule Crawlexir.Search.ReportTest do
         html_content: nil
       }
 
-      changeset = Report.changeset(%Report{}, %{keyword: nil})
+      changeset = Report.changeset(%Report{}, invalid_attributes)
 
       refute changeset.valid?
     end

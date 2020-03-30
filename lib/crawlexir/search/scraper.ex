@@ -1,8 +1,5 @@
 defmodule Crawlexir.Search.Scraper do
-  alias Crawlexir.Search
   alias Crawlexir.Search.ResultPage
-
-  @google_base_url "https://www.google.com/search?q="
 
   @browser_user_agent [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
@@ -13,24 +10,31 @@ defmodule Crawlexir.Search.Scraper do
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36 Edg/80.0.361.62"
   ]
 
+  @doc """
+  Retrieve structured search results from Google.
+
+  ## Examples
+
+      iex> get("project management apps")
+      {:ok, %ResultPage{}}
+
+      iex> get("invalid search")
+      {:error, "Search page cannot be fetched (:nxdomain)"}
+  """
   def get(keyword) do
-    case get_search_page_content(keyword) do
-      {:ok, body} -> ResultPage.new(body)
-      {:error, reason} -> IO.inspect(reason)
+    headers = ["User-Agent": rotated_user_agent()]
+
+    case request().get(keyword, headers) do
+      {:ok, body} ->
+        ResultPage.new(body)
+
+      {:error, reason} ->
+        {:error, "Search page cannot be fetched (#{reason})"}
     end
   end
 
-  defp get_search_page_content(keyword) do
-    url = @google_base_url <> URI.encode(keyword)
-    headers = ["User-Agent": rotated_user_agent()]
-
-    case HTTPoison.get(url, headers) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body, headers: headers}} ->
-        {:ok, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+  defp request do
+    Application.get_env(:crawlexir, :google_request)
   end
 
   defp rotated_user_agent do

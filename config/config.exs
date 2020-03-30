@@ -8,7 +8,8 @@
 use Mix.Config
 
 config :crawlexir,
-  ecto_repos: [Crawlexir.Repo]
+  ecto_repos: [Crawlexir.Repo],
+  google_request: Crawlexir.Google.Request
 
 # Configures the endpoint
 config :crawlexir, CrawlexirWeb.Endpoint,
