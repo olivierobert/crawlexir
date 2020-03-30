@@ -1,5 +1,5 @@
 defmodule Crawlexir.Search.ScraperTest do
-  use CrawlexirWeb.ConnCase, async: true
+  use Crawlexir.DataCase, async: true
 
   alias Crawlexir.Search.Scraper
   alias Crawlexir.Search.ResultPage
