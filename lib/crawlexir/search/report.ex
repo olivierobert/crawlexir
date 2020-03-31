@@ -24,5 +24,6 @@ defmodule Crawlexir.Search.Report do
     report
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
+    |> assoc_constraint(:keyword)
   end
 end

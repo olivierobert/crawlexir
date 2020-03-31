@@ -4,6 +4,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
 
   alias Crawlexir.Search
   alias Crawlexir.Search.ScraperWorker
+
   alias Crawlexir.KeywordFactory
 
   describe "perform" do

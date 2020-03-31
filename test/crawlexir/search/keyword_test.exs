@@ -1,8 +1,9 @@
 defmodule Crawlexir.Search.KeywordTest do
   use Crawlexir.DataCase, async: true
 
-  alias Crawlexir.KeywordFactory
   alias Crawlexir.Search.Keyword
+
+  alias Crawlexir.KeywordFactory
 
   describe "changeset" do
     test "requires the keyword field" do

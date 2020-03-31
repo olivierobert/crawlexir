@@ -116,9 +116,8 @@ defmodule Crawlexir.Search do
 
   """
   def create_keyword_report(%Keyword{} = keyword, attrs \\ %{}) do
-    %Report{}
+    Ecto.build_assoc(keyword, :report)
     |> Report.changeset(attrs)
-    |> Ecto.Changeset.put_change(:keyword_id, keyword.id)
     |> Repo.insert()
   end
 

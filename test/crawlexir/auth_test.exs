@@ -17,7 +17,12 @@ defmodule Crawlexir.AuthTest do
     end
 
     test "create_user/1 with valid data creates a new user" do
-      user_attributes = UserFactory.build_attributes(:user, email: "jean@bon.com", first_name: "Jean", last_name: "Bon")
+      user_attributes =
+        UserFactory.build_attributes(:user,
+          email: "jean@bon.com",
+          first_name: "Jean",
+          last_name: "Bon"
+        )
 
       assert {:ok, %User{} = user} = Auth.create_user(user_attributes)
       assert user.email == "jean@bon.com"
@@ -32,7 +37,8 @@ defmodule Crawlexir.AuthTest do
     end
 
     test "login_user/2 with valid data returns the user" do
-      user_attributes = UserFactory.build_attributes(:user, email: "jean@bon.com", password: "12345678")
+      user_attributes =
+        UserFactory.build_attributes(:user, email: "jean@bon.com", password: "12345678")
 
       Auth.create_user(user_attributes)
 
@@ -40,7 +46,8 @@ defmodule Crawlexir.AuthTest do
     end
 
     test "login_user/2 with invalid password returns an error" do
-      user_attributes = UserFactory.build_attributes(:user, email: "jean@bon.com", password: "12345678")
+      user_attributes =
+        UserFactory.build_attributes(:user, email: "jean@bon.com", password: "12345678")
 
       Auth.create_user(user_attributes)
 
