@@ -75,26 +75,6 @@ defmodule Crawlexir.SearchTest do
       assert_enqueued(worker: ScraperWorker, args: %{id: keyword.id})
     end
 
-    test "update_keyword/2 with valid data updates the keyword" do
-      keyword = keyword_fixture()
-
-      assert {:ok, %Keyword{} = keyword} = Search.update_keyword(keyword, @update_attrs)
-      assert keyword.keyword == "some updated keyword"
-    end
-
-    test "update_keyword/2 with invalid data returns error changeset" do
-      keyword = keyword_fixture()
-
-      assert {:error, %Ecto.Changeset{}} = Search.update_keyword(keyword, @invalid_attrs)
-      assert keyword == Search.get_keyword!(keyword.id)
-    end
-
-    test "change_keyword/1 returns a keyword changeset" do
-      keyword = keyword_fixture()
-
-      assert %Ecto.Changeset{} = Search.change_keyword(keyword)
-    end
-
     test "parse_keyword_file/1 with a valid CSV file returns a list of keyword" do
       valid_file = Path.expand("../fixtures/assets/valid-keyword.csv", __DIR__)
 

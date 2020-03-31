@@ -7,7 +7,7 @@ defmodule Crawlexir.Search.ScraperWorker do
   alias Crawlexir.Search.ResultPage
 
   @impl Oban.Worker
-  def perform(%{"keyword_id" => keyword_id}) do
+  def perform(%{"keyword_id" => keyword_id}, _job) do
     fetch_keyword(keyword_id)
     |> get_scraped_content()
     |> create_report()
