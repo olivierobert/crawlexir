@@ -136,6 +136,9 @@ defmodule Crawlexir.Search do
 
   """
   def get_keyword_report(keyword_id) do
-    Repo.one(from r in Report, where: r.keyword_id == ^keyword_id, preload: :keyword)
+    Report
+    |> where(keyword_id: ^keyword_id)
+    |> preload(:keyword)
+    |> Repo.one()
   end
 end
