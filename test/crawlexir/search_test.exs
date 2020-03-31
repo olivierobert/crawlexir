@@ -2,77 +2,58 @@ defmodule Crawlexir.SearchTest do
   use Crawlexir.DataCase
   use Oban.Testing, repo: Crawlexir.Repo
 
-  alias Crawlexir.Auth
   alias Crawlexir.Search
   alias Crawlexir.Search.ScraperWorker
+
+  alias Crawlexir.KeywordFactory
+  alias Crawlexir.UserFactory
 
   describe "keywords" do
     alias Crawlexir.Search.Keyword
 
-    @valid_attrs %{keyword: "some keyword"}
-    @update_attrs %{keyword: "some updated keyword"}
-    @invalid_attrs %{keyword: nil}
-
-    def keyword_fixture(attrs \\ %{}) do
-      user = user_fixture()
-      keyword_attributes = attrs |> Enum.into(@valid_attrs)
-      {:ok, keyword} = Search.create_keyword(user, keyword_attributes)
-
-      keyword
-    end
-
-    def user_fixture() do
-      user_attributes = %{
-        email: "jean@bon.com",
-        first_name: "Jean",
-        last_name: "Bon",
-        password: "12345678"
-      }
-
-      {:ok, user} = Auth.create_user(user_attributes)
-
-      user
-    end
-
     test "list_keywords/0 returns all keywords" do
-      keyword = keyword_fixture()
+      keyword = KeywordFactory.insert!(:keyword_with_user)
+
       assert Search.list_keywords() == [keyword]
     end
 
     test "get_keyword!/1 returns the keyword with given id" do
-      keyword = keyword_fixture()
+      keyword = KeywordFactory.insert!(:keyword_with_user)
+
       assert Search.get_keyword!(keyword.id) == keyword
     end
 
     test "create_keyword/1 with valid data creates a keyword" do
-      user = user_fixture()
+      user = UserFactory.insert!(:user)
+      keyword_attributes = KeywordFactory.build_attributes(:keyword, keyword: "amazing job")
 
-      assert {:ok, %Keyword{} = keyword} = Search.create_keyword(user, @valid_attrs)
-      assert keyword.keyword == "some keyword"
+      assert {:ok, %Keyword{} = keyword} = Search.create_keyword(user, keyword_attributes)
+      assert keyword.keyword == "amazing job"
     end
 
     test "create_keyword/1 with invalid data returns error changeset" do
-      user = user_fixture()
+      user = UserFactory.insert!(:user)
+      keyword_attributes = KeywordFactory.build_attributes(:keyword, keyword: nil)
 
-      assert {:error, %Ecto.Changeset{}} = Search.create_keyword(user, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Search.create_keyword(user, keyword_attributes)
     end
 
     test "search_for_keyword/1 with valid data creates a keyword" do
-      user = user_fixture()
+      user = UserFactory.insert!(:user)
+      keyword_attributes = KeywordFactory.build_attributes(:keyword)
 
       assert {:ok, %{keyword: keyword, worker: _job}} =
-               Search.search_for_keyword(user, @valid_attrs)
-
-      assert keyword.keyword == "some keyword"
+               Search.search_for_keyword(user, keyword_attributes)
     end
 
     test "search_for_keyword/1 with valid data triggers a scraper worker" do
-      user = user_fixture()
+      user = UserFactory.insert!(:user)
+      keyword_attributes = KeywordFactory.build_attributes(:keyword)
 
       assert {:ok, %{keyword: keyword, worker: _job}} =
-               Search.search_for_keyword(user, @valid_attrs)
+               Search.search_for_keyword(user, keyword_attributes)
 
-      assert_enqueued(worker: ScraperWorker, args: %{id: keyword.id})
+      assert_enqueued(worker: ScraperWorker, args: %{keyword_id: keyword.id})
     end
 
     test "parse_keyword_file/1 with a valid CSV file returns a list of keyword" do

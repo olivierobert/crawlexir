@@ -55,9 +55,8 @@ defmodule Crawlexir.Search do
 
   """
   def create_keyword(%User{} = user, attrs \\ %{}) do
-    %Keyword{}
+    Ecto.build_assoc(user, :keywords)
     |> Keyword.changeset(attrs)
-    |> Ecto.Changeset.put_change(:user_id, user.id)
     |> Repo.insert()
   end
 

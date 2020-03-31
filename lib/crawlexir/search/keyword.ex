@@ -14,7 +14,7 @@ defmodule Crawlexir.Search.Keyword do
     timestamps()
   end
 
-  @required_field ~w(keyword user_id)a
+  @required_field ~w(keyword)a
 
   @doc false
   def changeset(keyword, attrs) do
