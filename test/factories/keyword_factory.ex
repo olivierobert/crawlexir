@@ -11,9 +11,11 @@ defmodule Crawlexir.KeywordFactory do
   end
 
   def build(:keyword_with_user) do
+    user = UserFactory.insert!(:user)
+
     %Keyword{
       keyword: "some keyword",
-      user: UserFactory.build(:user)
+      user_id: user.id
     }
   end
 end

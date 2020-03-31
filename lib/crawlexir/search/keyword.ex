@@ -14,10 +14,13 @@ defmodule Crawlexir.Search.Keyword do
     timestamps()
   end
 
+  @required_field ~w(keyword user_id)a
+
   @doc false
   def changeset(keyword, attrs) do
     keyword
-    |> cast(attrs, [:keyword])
-    |> validate_required([:keyword])
+    |> cast(attrs, @required_field)
+    |> validate_required(@required_field)
+    |> assoc_constraint(:user)
   end
 end
