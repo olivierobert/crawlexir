@@ -26,7 +26,7 @@ defmodule Crawlexir.Search.Scraper do
 
     case request().get(keyword, headers) do
       {:ok, body} ->
-        ResultPage.new(body)
+        ResultPage.parse(body)
 
       {:error, reason} ->
         {:error, "Search page cannot be fetched (#{reason})"}

@@ -27,7 +27,7 @@ defmodule Crawlexir.Search.ResultPage do
         raw_html:  "<!doctype html><html> <> ..."
       }
   """
-  def new(body) do
+  def parse(body) do
     parsed_body = Floki.parse_document!(body)
 
     {:ok,

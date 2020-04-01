@@ -3,11 +3,11 @@ defmodule Crawlexir.Search.ResultPageTest do
 
   alias Crawlexir.Search.ResultPage
 
-  describe "new" do
-    test "new/1 with a valid page body returns advertising content" do
+  describe "result page" do
+    test "parse/1 with a valid page body returns advertising content" do
       page_content = valid_page_fixture()
 
-      assert {:ok, %ResultPage{} = result_page} = ResultPage.new(page_content)
+      assert {:ok, %ResultPage{} = result_page} = ResultPage.parse(page_content)
       assert result_page.advertising_content.count == 1
 
       assert result_page.advertising_content.url_list == [
@@ -15,10 +15,10 @@ defmodule Crawlexir.Search.ResultPageTest do
              ]
     end
 
-    test "new/1 with a valid page body returns organic content" do
+    test "parse/1 with a valid page body returns organic content" do
       page_content = valid_page_fixture()
 
-      assert {:ok, %ResultPage{} = result_page} = ResultPage.new(page_content)
+      assert {:ok, %ResultPage{} = result_page} = ResultPage.parse(page_content)
       assert result_page.organic_content.count == 10
 
       assert List.first(result_page.organic_content.url_list) ==
@@ -28,34 +28,34 @@ defmodule Crawlexir.Search.ResultPageTest do
                "https://www.projectmanager.com/software/mobile"
     end
 
-    test "new/1 with a valid page body returns page content" do
+    test "parse/1 with a valid page body returns page content" do
       page_content = valid_page_fixture()
 
-      assert {:ok, %ResultPage{} = result_page} = ResultPage.new(page_content)
+      assert {:ok, %ResultPage{} = result_page} = ResultPage.parse(page_content)
       assert result_page.page_content.link_count == 105
     end
 
-    test "new/1 with a valid page body returns raw html" do
+    test "parse/1 with a valid page body returns raw html" do
       page_content = valid_page_fixture()
 
-      assert {:ok, %ResultPage{} = result_page} = ResultPage.new(page_content)
+      assert {:ok, %ResultPage{} = result_page} = ResultPage.parse(page_content)
       assert result_page.raw_html == page_content
     end
 
-    test "new/1 with a non-search page body returns a valid ResultPage" do
+    test "parse/1 with a non-search page body returns a valid ResultPage" do
       page_content = invalid_page_fixture()
 
-      assert {:ok, %ResultPage{} = result_page} = ResultPage.new(page_content)
+      assert {:ok, %ResultPage{} = result_page} = ResultPage.parse(page_content)
       assert result_page.advertising_content == %{count: 0, url_list: []}
       assert result_page.organic_content == %{count: 0, url_list: []}
       assert result_page.page_content == %{link_count: 106}
       assert result_page.raw_html == page_content
     end
 
-    test "new/1 with an invalid body returns a valid ResultPage" do
+    test "parse/1 with an invalid body returns a valid ResultPage" do
       invalid_body = "this is not HTML"
 
-      assert {:ok, %ResultPage{} = result_page} = ResultPage.new(invalid_body)
+      assert {:ok, %ResultPage{} = result_page} = ResultPage.parse(invalid_body)
       assert result_page.advertising_content == %{count: 0, url_list: []}
       assert result_page.organic_content == %{count: 0, url_list: []}
       assert result_page.page_content == %{link_count: 0}
