@@ -4,7 +4,6 @@ defmodule Crawlexir.ReportFactory do
   alias Crawlexir.Search.Report
   alias Crawlexir.KeywordFactory
 
-
   def build(:report) do
     %Report{
       advertiser_link_count: 1,

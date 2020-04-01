@@ -71,7 +71,7 @@ defmodule Crawlexir.SearchTest do
 
     test "get_keyword_report/1 with returns a report with given id" do
       keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
-       ReportFactory.insert!(:report, keyword_id: keyword.id)
+      ReportFactory.insert!(:report, keyword_id: keyword.id)
 
       fetched_report = Search.get_keyword_report(keyword.id)
 
@@ -96,7 +96,8 @@ defmodule Crawlexir.SearchTest do
       keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
       report_attributes = ReportFactory.build_attributes(:report, link_count: nil)
 
-      assert {:error, %Ecto.Changeset{}} = Search.create_keyword_report(keyword, report_attributes)
+      assert {:error, %Ecto.Changeset{}} =
+               Search.create_keyword_report(keyword, report_attributes)
     end
   end
 end
