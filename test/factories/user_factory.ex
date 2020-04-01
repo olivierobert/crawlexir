@@ -5,10 +5,10 @@ defmodule Crawlexir.UserFactory do
 
   def build(:user) do
     %User{
-      email: "jean@bon.com",
-      first_name: "Jean",
-      last_name: "Bon",
-      password: "12345678"
+      email: Faker.Internet.safe_email(),
+      first_name: Faker.Name.first_name(),
+      last_name: Faker.Name.last_name(),
+      password: "#{Faker.Lorem.characters(8..15)}"
     }
   end
 end

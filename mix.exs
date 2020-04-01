@@ -38,6 +38,7 @@ defmodule Crawlexir.MixProject do
       {:argon2_elixir, "~> 2.0"},
       {:csv, "~> 2.3"},
       {:ecto_sql, "~> 3.1"},
+      {:faker, "~> 0.13", only: :test},
       {:floki, "~> 0.26"},
       {:gettext, "~> 0.11"},
       {:httpoison, "~> 1.6.2"},

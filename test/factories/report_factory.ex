@@ -18,6 +18,6 @@ defmodule Crawlexir.ReportFactory do
   def build(:report_with_keyword) do
     keyword = KeywordFactory.insert!(:keyword)
 
-    build(:report) |> Map.put_new(keyword_id: keyword.id)
+    build(:report) |> Map.replace(:keyword_id, keyword.id)
   end
 end
