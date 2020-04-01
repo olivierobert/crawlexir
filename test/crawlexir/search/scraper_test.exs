@@ -10,7 +10,7 @@ defmodule Crawlexir.Search.ScraperTest do
     end
 
     test "get/1 with an HTTP error returns an error" do
-      assert {:error, reason} = Scraper.get("error")
+      assert {:error, reason} = Scraper.get("keyword error")
     end
   end
 end
