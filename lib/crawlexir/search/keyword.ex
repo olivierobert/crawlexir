@@ -5,6 +5,8 @@ defmodule Crawlexir.Search.Keyword do
   alias Crawlexir.Auth.User
   alias Crawlexir.Search.Report
 
+  @required_field ~w(keyword)a
+
   schema "keywords" do
     field :keyword, :string
 
@@ -13,8 +15,6 @@ defmodule Crawlexir.Search.Keyword do
 
     timestamps()
   end
-
-  @required_field ~w(keyword)a
 
   @doc false
   def changeset(keyword, attrs) do
