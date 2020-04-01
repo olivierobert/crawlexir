@@ -74,7 +74,7 @@ defmodule Crawlexir.Search do
   def list_user_keyword(user_id) do
     Keyword
     |> where(user_id: ^user_id)
-    |> Repo.all
+    |> Repo.all()
   end
 
   @doc """
