@@ -37,10 +37,10 @@ defmodule Crawlexir.Search do
       %Keyword{}
 
       iex> get_keyword!(456)
-      ** (Ecto.NoResultsError)
+      nil
 
   """
-  def get_keyword!(id), do: Repo.get!(Keyword, id)
+  def get_keyword(id), do: Repo.get(Keyword, id)
 
   @doc """
   Creates a keyword.
@@ -104,24 +104,6 @@ defmodule Crawlexir.Search do
   end
 
   @doc """
-  Creates a scrapping report for a keyword.
-
-  ## Examples
-
-      iex> create_keyword_report(%Keyword{}, %{field: value})
-      {:ok, %Keyword{}}
-
-      iex> create_keyword((%Keyword{}, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_keyword_report(%Keyword{} = keyword, attrs \\ %{}) do
-    Ecto.build_assoc(keyword, :report)
-    |> Report.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
   Get a keyword report.
 
   ## Examples
@@ -138,5 +120,23 @@ defmodule Crawlexir.Search do
     |> where(keyword_id: ^keyword_id)
     |> preload(:keyword)
     |> Repo.one()
+  end
+
+  @doc """
+  Creates a scrapping report for a keyword.
+
+  ## Examples
+
+      iex> create_keyword_report(%Keyword{}, %{field: value})
+      {:ok, %Keyword{}}
+
+      iex> create_keyword((%Keyword{}, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_keyword_report(%Keyword{} = keyword, attrs \\ %{}) do
+    Ecto.build_assoc(keyword, :report)
+    |> Report.changeset(attrs)
+    |> Repo.insert()
   end
 end

@@ -2,6 +2,8 @@ defmodule Crawlexir.ReportFactory do
   use Crawlexir.FactoryBase
 
   alias Crawlexir.Search.Report
+  alias Crawlexir.KeywordFactory
+
 
   def build(:report) do
     %Report{
@@ -12,5 +14,11 @@ defmodule Crawlexir.ReportFactory do
       link_count: 10,
       html_content: "<html></html>"
     }
+  end
+
+  def build(:report_with_keyword) do
+    keyword = KeywordFactory.insert!(:keyword)
+
+    build(:report) |> Map.put_new(keyword_id: keyword.id)
   end
 end

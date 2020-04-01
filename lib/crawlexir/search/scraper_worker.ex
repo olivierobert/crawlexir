@@ -14,7 +14,7 @@ defmodule Crawlexir.Search.ScraperWorker do
   end
 
   defp fetch_keyword(keyword_id) do
-    case Search.get_keyword!(keyword_id) do
+    case Search.get_keyword(keyword_id) do
       nil ->
         {:error, "Not found keyword matching ID: #{keyword_id}}"}
 
