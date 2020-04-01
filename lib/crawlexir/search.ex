@@ -61,6 +61,23 @@ defmodule Crawlexir.Search do
   end
 
   @doc """
+  List all user keywords.
+
+  ## Examples
+
+      iex> list_user_keyword(123)
+      [%Keyword{}]
+
+      iex> list_user_keyword(456)
+      []
+  """
+  def list_user_keyword(user_id) do
+    Keyword
+    |> where(user_id: ^user_id)
+    |> Repo.all
+  end
+
+  @doc """
   Creates a keyword and schedule a background job to generate scraping results.
 
   ## Examples

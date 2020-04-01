@@ -1,5 +1,5 @@
 defmodule Crawlexir.SearchTest do
-  use Crawlexir.DataCase
+  use Crawlexir.DataCase, async: true
   use Oban.Testing, repo: Crawlexir.Repo
 
   alias Crawlexir.Search
@@ -41,6 +41,21 @@ defmodule Crawlexir.SearchTest do
       keyword_attributes = KeywordFactory.build_attributes(:keyword, keyword: nil)
 
       assert {:error, %Ecto.Changeset{}} = Search.create_keyword(user, keyword_attributes)
+    end
+
+    test "list_user_keyword/1 with valid data returns the list of keyword given a user ID" do
+      user = UserFactory.insert!(:user)
+      user_keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
+      other_user_keyword = KeywordFactory.insert!(:keyword_with_user)
+
+      assert Search.list_user_keyword(user.id) == [user_keyword]
+    end
+
+    test "create_keyword/1 returns nil given a user has no keyword" do
+      user = UserFactory.insert!(:user)
+      other_user_keyword = KeywordFactory.insert!(:keyword_with_user)
+
+      assert Search.list_user_keyword(user.id) == []
     end
 
     test "search_for_keyword/1 with valid data creates a keyword" do
