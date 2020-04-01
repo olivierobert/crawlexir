@@ -4,7 +4,7 @@ defmodule Crawlexir.Search.Report do
 
   alias Crawlexir.Search.Keyword
 
-  @required_fields ~w(advertiser_link_count advertiser_url_list organic_link_count organic_url_list link_count html_content)a
+  @permitted_field ~w(advertiser_link_count advertiser_url_list organic_link_count organic_url_list link_count html_content)a
 
   schema "reports" do
     field :advertiser_link_count, :integer
@@ -22,8 +22,8 @@ defmodule Crawlexir.Search.Report do
   @doc false
   def changeset(report, attrs) do
     report
-    |> cast(attrs, @required_fields)
-    |> validate_required(@required_fields)
+    |> cast(attrs, @permitted_field)
+    |> validate_required(@permitted_field)
     |> assoc_constraint(:keyword)
   end
 end

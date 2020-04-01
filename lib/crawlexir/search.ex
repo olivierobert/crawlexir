@@ -61,6 +61,24 @@ defmodule Crawlexir.Search do
   end
 
   @doc """
+  Update the scraping status of a keyword.
+
+  ## Examples
+
+      iex> update_keyword_status(%Keyword{}, :completed)
+      {:ok, %Keyword{}}
+
+      iex> update_keyword_status((%Keyword{}, :bad_status)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_keyword_status(%Keyword{} = keyword, status) do
+    keyword
+    |> Keyword.changeset(%{status: status})
+    |> Repo.update()
+  end
+
+  @doc """
   List all user keywords.
 
   ## Examples
