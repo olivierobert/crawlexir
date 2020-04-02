@@ -1,5 +1,5 @@
 defmodule Crawlexir.SearchTest do
-  use Crawlexir.DataCase
+  use Crawlexir.DataCase, async: true
   use Oban.Testing, repo: Crawlexir.Repo
 
   alias Crawlexir.Search
@@ -43,12 +43,42 @@ defmodule Crawlexir.SearchTest do
       assert {:error, %Ecto.Changeset{}} = Search.create_keyword(user, keyword_attributes)
     end
 
+    test "list_user_keyword/1 with valid data returns the list of keyword given a user ID" do
+      user = UserFactory.insert!(:user)
+      user_keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
+      _other_user_keyword = KeywordFactory.insert!(:keyword_with_user)
+
+      assert Search.list_user_keyword(user.id) == [user_keyword]
+    end
+
+    test "create_keyword/1 returns nil given a user has no keyword" do
+      user = UserFactory.insert!(:user)
+      _other_user_keyword = KeywordFactory.insert!(:keyword_with_user)
+
+      assert Search.list_user_keyword(user.id) == []
+    end
+
     test "search_for_keyword/1 with valid data creates a keyword" do
       user = UserFactory.insert!(:user)
       keyword_attributes = KeywordFactory.build_attributes(:keyword)
 
       assert {:ok, %{keyword: keyword, worker: _job}} =
                Search.search_for_keyword(user, keyword_attributes)
+    end
+
+    test "update_keyword_status/1 with a valid status returns the updated keyword" do
+      keyword = KeywordFactory.insert!(:keyword_with_user, status: :pending)
+
+      assert {:ok, %Keyword{} = updated_keyword} =
+               Search.update_keyword_status(keyword, :completed)
+
+      assert updated_keyword.status == :completed
+    end
+
+    test "update_keyword_status/1 with an valid status returns an error changeset" do
+      keyword = KeywordFactory.insert!(:keyword_with_user, status: :pending)
+
+      assert {:error, %Ecto.Changeset{}} = Search.update_keyword_status(keyword, :invalid)
     end
 
     test "search_for_keyword/1 with valid data schedule a background job" do

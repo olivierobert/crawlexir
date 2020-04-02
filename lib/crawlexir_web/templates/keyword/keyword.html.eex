@@ -1,0 +1,5 @@
+<tr>
+  <td><%= keyword_text_or_link(@keyword) %></td>
+  <td><%= @keyword.inserted_at %></td>
+  <td><%= status_text(@keyword) %></td>
+</tr>

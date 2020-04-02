@@ -5,7 +5,7 @@ defmodule Crawlexir.Auth.User do
   alias Crawlexir.Auth.Password
   alias Crawlexir.Search.Keyword
 
-  @required_field ~w(email first_name last_name password)a
+  @permitted_field ~w(email first_name last_name password)a
 
   schema "users" do
     field :email, :string
@@ -23,8 +23,8 @@ defmodule Crawlexir.Auth.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, @required_field)
-    |> validate_required(@required_field)
+    |> cast(attrs, @permitted_field)
+    |> validate_required(@permitted_field)
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)
     |> unique_constraint(:email)

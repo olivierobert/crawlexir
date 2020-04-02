@@ -61,6 +61,41 @@ defmodule Crawlexir.Search do
   end
 
   @doc """
+  Update the scraping status of a keyword.
+
+  ## Examples
+
+      iex> update_keyword_status(%Keyword{}, :completed)
+      {:ok, %Keyword{}}
+
+      iex> update_keyword_status((%Keyword{}, :bad_status)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_keyword_status(%Keyword{} = keyword, status) do
+    keyword
+    |> Keyword.changeset(%{status: status})
+    |> Repo.update()
+  end
+
+  @doc """
+  List all user keywords.
+
+  ## Examples
+
+      iex> list_user_keyword(123)
+      [%Keyword{}]
+
+      iex> list_user_keyword(456)
+      []
+  """
+  def list_user_keyword(user_id) do
+    Keyword
+    |> where(user_id: ^user_id)
+    |> Repo.all()
+  end
+
+  @doc """
   Creates a keyword and schedule a background job to generate scraping results.
 
   ## Examples

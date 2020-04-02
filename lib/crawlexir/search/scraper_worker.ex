@@ -1,14 +1,15 @@
 defmodule Crawlexir.Search.ScraperWorker do
-  use Oban.Worker, queue: :default
+  use Oban.Worker,
+    queue: :default,
+    max_attempts: 3
 
   alias Crawlexir.Search
-  alias Crawlexir.Search.Report
-  alias Crawlexir.Search.Scraper
-  alias Crawlexir.Search.ResultPage
+  alias Crawlexir.Search.{Report, ResultPage, Scraper}
 
   @impl Oban.Worker
   def perform(%{"keyword_id" => keyword_id}, _job) do
     fetch_keyword(keyword_id)
+    |> update_keyword_status(:in_progress)
     |> get_scraped_content()
     |> create_report()
   end
@@ -23,12 +24,20 @@ defmodule Crawlexir.Search.ScraperWorker do
     end
   end
 
+  defp update_keyword_status(keyword, status) do
+    {:ok, keyword} = Search.update_keyword_status(keyword, status)
+
+    keyword
+  end
+
   def get_scraped_content(keyword) do
     case Scraper.get(keyword.keyword) do
       {:ok, %ResultPage{} = result_page} ->
         %{keyword: keyword, result_page: result_page}
 
       {:error, reason} ->
+        update_keyword_status(keyword, :failed)
+
         {:error, "No scraped content for #{keyword.id} due to: #{reason}"}
     end
   end
@@ -43,6 +52,8 @@ defmodule Crawlexir.Search.ScraperWorker do
            html_content: result_page.raw_html
          }) do
       {:ok, %Report{} = _report} ->
+        update_keyword_status(keyword, :completed)
+
         :ok
 
       {:error, _} ->

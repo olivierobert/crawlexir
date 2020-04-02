@@ -1,0 +1,23 @@
+<section class="list-keyword">
+  <header role="presentation">
+    <h2>Dashboard</h2>
+  </header>
+  <%= if show_keyword_list?(@conn) do%>
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Uploaded On</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render_many(@keywords, CrawlexirWeb.KeywordView, "keyword.html") %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="list-keyword__blank-state">
+      <p>Get started by <%= link "uploading your keywords 🚀", to: Routes.upload_path(@conn, :new) %></p>
+    </div>
+  <% end %>
+</section>

@@ -1,5 +1,5 @@
 defmodule Crawlexir.Google.RequestMock do
-  def get("error", _headers) do
+  def get("keyword error", _headers) do
     {:error, :nxdomain}
   end
 
