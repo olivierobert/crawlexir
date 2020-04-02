@@ -1,6 +1,5 @@
 defmodule CrawlexirWeb.UploadControllerTest do
   use CrawlexirWeb.ConnCase
-  use CrawlexirWeb.ControllerCase
 
   alias Crawlexir.Search
 
