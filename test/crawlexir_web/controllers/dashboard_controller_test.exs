@@ -4,7 +4,7 @@ defmodule CrawlexirWeb.DashboardControllerTest do
   alias Crawlexir.{UserFactory, KeywordFactory}
 
   describe "GET /" do
-    test "lists all use keywords", %{conn: conn} do
+    test "lists all user keywords", %{conn: conn} do
       user = UserFactory.insert!(:user)
       keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
 

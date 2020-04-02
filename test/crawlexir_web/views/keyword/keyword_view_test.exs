@@ -6,19 +6,19 @@ defmodule CrawlexirWeb.KeywordViewTest do
   alias CrawlexirWeb.KeywordView
   alias Crawlexir.KeywordFactory
 
-  test "keyword_text_or_link/1 returns a link given a completed keyword" do
+  test "keyword_text_or_link/2 returns a link given a completed keyword", %{conn: conn} do
     keyword =
       KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job", status: :completed)
 
-    text_or_link = KeywordView.keyword_text_or_link(keyword)
+    text_or_link = KeywordView.keyword_text_or_link(conn, keyword)
 
-    assert safe_to_string(text_or_link) == "<a href=\"#\">#{keyword.keyword}</a>"
+    assert safe_to_string(text_or_link) == "<a href=\"/keywords/#{keyword.id}\">#{keyword.keyword}</a>"
   end
 
-  test "keyword_text_or_link/1 returns a link given a non-completed keyword" do
+  test "keyword_text_or_link/2 returns a link given a non-completed keyword", %{conn: conn} do
     keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job", status: :pending)
 
-    text_or_link = KeywordView.keyword_text_or_link(keyword)
+    text_or_link = KeywordView.keyword_text_or_link(conn, keyword)
 
     assert text_or_link == keyword.keyword
   end
