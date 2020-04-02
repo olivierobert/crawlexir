@@ -1,5 +1,5 @@
 defmodule CrawlexirWeb.DashboardControllerTest do
-  use CrawlexirWeb.ConnCase
+  use CrawlexirWeb.ConnCase, async: true
 
   alias Crawlexir.{UserFactory, KeywordFactory}
 
