@@ -12,7 +12,8 @@ defmodule CrawlexirWeb.KeywordViewTest do
 
     text_or_link = KeywordView.keyword_text_or_link(conn, keyword)
 
-    assert safe_to_string(text_or_link) == "<a href=\"/keywords/#{keyword.id}\">#{keyword.keyword}</a>"
+    assert safe_to_string(text_or_link) ==
+             "<a href=\"/keywords/#{keyword.id}\">#{keyword.keyword}</a>"
   end
 
   test "keyword_text_or_link/2 returns a link given a non-completed keyword", %{conn: conn} do
