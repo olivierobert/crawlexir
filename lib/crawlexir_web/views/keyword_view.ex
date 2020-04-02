@@ -3,9 +3,8 @@ defmodule CrawlexirWeb.KeywordView do
 
   alias Crawlexir.Search.Keyword
 
-  def keyword_text_or_link(%Keyword{status: :completed} = keyword) do
-    # TODO: replace with actual keyword report path
-    link(keyword.keyword, to: "#")
+  def keyword_text_or_link(conn, %Keyword{status: :completed} = keyword) do
+    link(keyword.keyword, to: Routes.keyword_path(conn, :show, keyword.id))
   end
 
   def keyword_text_or_link(%Keyword{} = keyword), do: keyword.keyword

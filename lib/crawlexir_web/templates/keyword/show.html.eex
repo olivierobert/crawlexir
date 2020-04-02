@@ -1,0 +1,40 @@
+<header>
+  <%= link("Back to the list of keywords", to: Routes.dashboard_path(@conn, :index)) %>
+  <h2>Report for "<%= @keyword_report.keyword.keyword %>"</h2>
+  <small>Scraped on <%= @keyword_report.keyword.inserted_at %></small>
+</header>
+<section class="keyword-report">
+  <h3>Advertising Content</h3>
+  <dl>
+    <dt>Number of advertisers</dt>
+    <dd><%= @keyword_report.advertiser_link_count %></dd>
+    <dt>Advertiser Links</dt>
+    <dd>
+      <ul>
+        <%= for link <- @keyword_report.advertiser_url_list do %>
+          <li><a href="<%= link %>"><%= link %></a></li>
+        <% end %>
+      </ul>
+    </dd>
+  </dl>
+
+  <h3>Organic Content</h3>
+  <dl>
+    <dt>Number of results</dt>
+    <dd><%= @keyword_report.organic_link_count %></dd>
+    <dt>Advertiser Links</dt>
+    <dd>
+      <ul>
+        <%= for link <- @keyword_report.organic_url_list do %>
+          <li><a href="<%= link %>"><%= link %></a></li>
+        <% end %>
+      </ul>
+    </dd>
+  </dl>
+
+  <h3>Page Content</h3>
+  <dl>
+    <dt>Number of links</dt>
+    <dd><%= @keyword_report.link_count %></dd>
+  </dl>
+</section>
