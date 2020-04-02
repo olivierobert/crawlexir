@@ -139,7 +139,23 @@ defmodule Crawlexir.Search do
   end
 
   @doc """
-  Get a keyword report.
+  Gets a single report
+
+  Raises `Ecto.NoResultsError` if the report does not exist.
+
+  ## Examples
+
+      iex> get_report!(report_id)
+      {:ok, %Report{}}
+
+      iex> get_report!(report_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_report!(id), do: Repo.get!(Report, id)
+
+  @doc """
+  Gets a single report by keyword ID.
 
   Raises `Ecto.NoResultsError` if the report does not exist.
 

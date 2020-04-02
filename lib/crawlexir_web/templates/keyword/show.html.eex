@@ -37,4 +37,6 @@
     <dt>Number of links</dt>
     <dd><%= @keyword_report.link_count %></dd>
   </dl>
+
+  <iframe src="<%= Routes.report_path(@conn, :show, @keyword_report.id) %>" frameborder="0" width="100%"></iframe>
 </section>
