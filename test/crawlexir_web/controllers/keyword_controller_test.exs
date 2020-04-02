@@ -3,7 +3,7 @@ defmodule CrawlexirWeb.KeywordControllerTest do
 
   alias Crawlexir.{KeywordFactory, UserFactory, ReportFactory}
 
-  describe "GET /keywords:id" do
+  describe "GET /keywords/:id" do
     test "renders the keyword report", %{conn: conn} do
       user = UserFactory.insert!(:user)
       keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
