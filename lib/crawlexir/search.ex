@@ -8,6 +8,7 @@ defmodule Crawlexir.Search do
 
   alias Crawlexir.Search.Csv
   alias Crawlexir.Search.Keyword
+  alias Crawlexir.Search.Report
   alias Crawlexir.Search.ScraperWorker
 
   alias Crawlexir.Auth.User
@@ -36,10 +37,10 @@ defmodule Crawlexir.Search do
       %Keyword{}
 
       iex> get_keyword!(456)
-      ** (Ecto.NoResultsError)
+      nil
 
   """
-  def get_keyword!(id), do: Repo.get!(Keyword, id)
+  def get_keyword(id), do: Repo.get(Keyword, id)
 
   @doc """
   Creates a keyword.
@@ -54,9 +55,8 @@ defmodule Crawlexir.Search do
 
   """
   def create_keyword(%User{} = user, attrs \\ %{}) do
-    %Keyword{}
+    Ecto.build_assoc(user, :keywords)
     |> Keyword.changeset(attrs)
-    |> Ecto.Changeset.put_change(:user_id, user.id)
     |> Repo.insert()
   end
 
@@ -76,40 +76,15 @@ defmodule Crawlexir.Search do
     Ecto.Multi.new()
     |> Ecto.Multi.run(:keyword, fn _, _ -> create_keyword(user, attrs) end)
     |> Ecto.Multi.run(:worker, fn _, %{keyword: keyword} ->
-      scrap_results_for_keyword(keyword.id)
+      create_scrap_worker_job(keyword.id)
     end)
     |> Repo.transaction()
   end
 
-  @doc """
-  Updates a keyword.
-
-  ## Examples
-
-      iex> update_keyword(keyword, %{field: new_value})
-      {:ok, %Keyword{}}
-
-      iex> update_keyword(keyword, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_keyword(%Keyword{} = keyword, attrs) do
-    keyword
-    |> Keyword.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking keyword changes.
-
-  ## Examples
-
-      iex> change_keyword(keyword)
-      %Ecto.Changeset{source: %Keyword{}}
-
-  """
-  def change_keyword(%Keyword{} = keyword) do
-    Keyword.changeset(keyword, %{})
+  defp create_scrap_worker_job(keyword_id) do
+    %{keyword_id: keyword_id}
+    |> ScraperWorker.new()
+    |> Oban.insert()
   end
 
   @doc """
@@ -128,9 +103,40 @@ defmodule Crawlexir.Search do
     Csv.parse(file)
   end
 
-  defp scrap_results_for_keyword(keyword_id) do
-    %{id: keyword_id}
-    |> ScraperWorker.new()
-    |> Oban.insert()
+  @doc """
+  Get a keyword report.
+
+  ## Examples
+
+      iex> get_keyword_report(keyword_id)
+      {:ok, %Report{}}
+
+      iex> get_keyword_report(keyword_id)
+      nil
+
+  """
+  def get_keyword_report(keyword_id) do
+    Report
+    |> where(keyword_id: ^keyword_id)
+    |> preload(:keyword)
+    |> Repo.one()
+  end
+
+  @doc """
+  Creates a scrapping report for a keyword.
+
+  ## Examples
+
+      iex> create_keyword_report(%Keyword{}, %{field: value})
+      {:ok, %Keyword{}}
+
+      iex> create_keyword((%Keyword{}, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_keyword_report(%Keyword{} = keyword, attrs \\ %{}) do
+    Ecto.build_assoc(keyword, :report)
+    |> Report.changeset(attrs)
+    |> Repo.insert()
   end
 end

@@ -11,7 +11,7 @@ defmodule Crawlexir.Auth.UserTest do
     password: "12345678"
   }
 
-  describe "validation" do
+  describe "changeset" do
     test "requires all fields" do
       changeset =
         User.changeset(%User{}, %{email: nil, first_name: nil, last_name: nil, password: nil})
@@ -44,14 +44,14 @@ defmodule Crawlexir.Auth.UserTest do
       assert {:error, changeset} = Auth.create_user(new_user_attributes)
       assert %{email: ["has already been taken"]} = errors_on(changeset)
     end
-  end
 
-  test "password is encrypted into the field encrypted password" do
-    attributes = %{@valid_attributes | password: "encryptme"}
+    test "password is encrypted into the field encrypted password" do
+      attributes = %{@valid_attributes | password: "encryptme"}
 
-    changeset = User.changeset(%User{}, @valid_attributes)
+      changeset = User.changeset(%User{}, @valid_attributes)
 
-    assert changeset.changes[:encrypted_password] !== nil
-    assert changeset.changes[:encrypted_password] !== "encryptme"
+      assert changeset.changes[:encrypted_password] !== nil
+      assert changeset.changes[:encrypted_password] !== "encryptme"
+    end
   end
 end

@@ -25,7 +25,9 @@ defmodule Crawlexir.MixProject do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "test/factories"]
+  # Use mock for development
+  defp elixirc_paths(:dev), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
@@ -36,7 +38,9 @@ defmodule Crawlexir.MixProject do
       {:argon2_elixir, "~> 2.0"},
       {:csv, "~> 2.3"},
       {:ecto_sql, "~> 3.1"},
+      {:floki, "~> 0.26"},
       {:gettext, "~> 0.11"},
+      {:httpoison, "~> 1.6.2"},
       {:jason, "~> 1.0"},
       {:oban, "~> 1.2"},
       {:phoenix, "~> 1.4.16"},
