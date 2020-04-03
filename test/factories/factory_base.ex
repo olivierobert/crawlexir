@@ -1,4 +1,6 @@
 defmodule Crawlexir.FactoryBase do
+  #  @callback insert_method(attrs :: term) ::
+
   defmacro __using__(_) do
     quote do
       @doc """
@@ -36,6 +38,8 @@ defmodule Crawlexir.FactoryBase do
       def insert!(factory_name, attributes \\ %{}) do
         Crawlexir.Repo.insert!(build(factory_name, attributes))
       end
+
+      defoverridable insert!: 2
     end
   end
 end

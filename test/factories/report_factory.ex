@@ -1,7 +1,9 @@
 defmodule Crawlexir.ReportFactory do
   use Crawlexir.FactoryBase
 
+  alias Crawlexir.Search
   alias Crawlexir.Search.Report
+
   alias Crawlexir.KeywordFactory
 
   def build(:report) do
@@ -18,6 +20,15 @@ defmodule Crawlexir.ReportFactory do
   def build(:report_with_keyword) do
     keyword = KeywordFactory.insert!(:keyword)
 
-    build(:report) |> Map.replace(:keyword_id, keyword.id)
+    build(:report) |> Map.replace!(:keyword_id, keyword.id)
+  end
+
+  def insert!(:report, attributes \\ %{}) do
+    keyword = attributes[:keyword] || KeywordFactory.insert!(:keyword_with_user)
+
+    case Search.create_keyword_report(keyword, build_attributes(:report, attributes)) do
+      {:ok, report} -> report
+      {:error, changeset} -> {:error, changeset}
+    end
   end
 end

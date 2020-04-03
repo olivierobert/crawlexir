@@ -1,6 +1,7 @@
 defmodule Crawlexir.UserFactory do
   use Crawlexir.FactoryBase
 
+  alias Crawlexir.Auth
   alias Crawlexir.Auth.User
 
   def build(:user) do
@@ -10,5 +11,10 @@ defmodule Crawlexir.UserFactory do
       last_name: Faker.Name.last_name(),
       password: "#{Faker.Lorem.characters(8..15)}"
     }
+  end
+
+  def insert!(:user, attributes \\ %{}) do
+    {:ok, user} = Auth.create_user(build_attributes(:user, attributes))
+    user
   end
 end
