@@ -3,7 +3,7 @@ defmodule Crawlexir.Search.ReportTest do
 
   alias Crawlexir.Search.Report
 
-  alias Crawlexir.ReportFactory
+  alias Crawlexir.{ReportFactory, KeywordFactory}
 
   describe "changeset" do
     test "requires the content fields" do
@@ -30,11 +30,13 @@ defmodule Crawlexir.Search.ReportTest do
     end
 
     test "requires a valid keyword" do
-      non_existing_id = 1
+      keyword = KeywordFactory.insert!(:keyword)
+      attributes = ReportFactory.build_attributes(:report, keyword: keyword)
 
-      assert_raise Ecto.ConstraintError, fn ->
-        ReportFactory.insert!(:report, keyword_id: non_existing_id)
-      end
+      Crawlexir.Repo.delete_all(Crawlexir.Search.Keyword)
+
+      assert {:error, changeset} = ReportFactory.insert!(:report, attributes)
+      assert %{keyword: ["does not exist"]} = errors_on(changeset)
     end
   end
 end

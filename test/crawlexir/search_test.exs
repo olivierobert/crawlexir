@@ -45,7 +45,7 @@ defmodule Crawlexir.SearchTest do
 
     test "list_user_keyword/1 with valid data returns the list of keyword given a user ID" do
       user = UserFactory.insert!(:user)
-      user_keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
+      user_keyword = KeywordFactory.insert!(:keyword, user: user)
       _other_user_keyword = KeywordFactory.insert!(:keyword_with_user)
 
       assert Search.list_user_keyword(user.id) == [user_keyword]
@@ -116,7 +116,7 @@ defmodule Crawlexir.SearchTest do
 
     test "get_keyword_report!/1 returns a report with given keyword id" do
       keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
-      ReportFactory.insert!(:report, keyword_id: keyword.id)
+      ReportFactory.insert!(:report, keyword: keyword)
 
       assert %Report{} = fetched_report = Search.get_keyword_report!(keyword.id)
       assert fetched_report.keyword.keyword == "amazing job"

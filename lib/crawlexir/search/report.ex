@@ -23,7 +23,7 @@ defmodule Crawlexir.Search.Report do
   def changeset(report, attrs) do
     report
     |> cast(attrs, @permitted_field)
-    |> validate_required(@permitted_field)
     |> assoc_constraint(:keyword)
+    |> validate_required(@permitted_field)
   end
 end

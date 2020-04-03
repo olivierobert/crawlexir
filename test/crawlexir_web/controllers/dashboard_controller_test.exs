@@ -6,7 +6,7 @@ defmodule CrawlexirWeb.DashboardControllerTest do
   describe "GET /" do
     test "lists all user keywords", %{conn: conn} do
       user = UserFactory.insert!(:user)
-      keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
+      keyword = KeywordFactory.insert!(:keyword, user: user)
 
       conn =
         authenticated_conn(user)

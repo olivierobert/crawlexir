@@ -6,8 +6,8 @@ defmodule CrawlexirWeb.KeywordControllerTest do
   describe "GET /keywords/:id" do
     test "renders the keyword report", %{conn: conn} do
       user = UserFactory.insert!(:user)
-      keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
-      ReportFactory.insert!(:report, keyword_id: keyword.id)
+      keyword = KeywordFactory.insert!(:keyword, user: user)
+      ReportFactory.insert!(:report, keyword: keyword)
 
       conn =
         authenticated_conn(user)

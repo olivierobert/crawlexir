@@ -22,7 +22,7 @@ defmodule Crawlexir.Search.Keyword do
   def changeset(keyword, attrs) do
     keyword
     |> cast(attrs, @permitted_field)
-    |> validate_required(@required_field)
     |> assoc_constraint(:user)
+    |> validate_required(@required_field)
   end
 end
