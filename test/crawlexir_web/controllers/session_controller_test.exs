@@ -51,15 +51,17 @@ defmodule CrawlexirWeb.SessionControllerTest do
   describe "#delete" do
     setup [:create_user]
 
-    # FIXME: Revisit to check why the test assertions are failing
-    @tag :skip
     test "it resets the session and redirect to the sign in page", %{conn: conn, user: user} do
       conn =
         conn
-        |> init_test_session(current_user_id: user.id, current_user: user)
+        |> init_test_session(%{})
+        |> put_session(:current_user_id, user.id)
+        |> put_session(:current_user, user)
         |> delete(Routes.session_path(conn, :delete))
 
-      assert get_session(conn) == %{}
+      assert get_session(conn, :current_user_id) == nil
+      assert get_session(conn, :current_user) == nil
+      assert get_session(conn, :user_signed_in?) == nil
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
   end
