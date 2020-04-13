@@ -39,6 +39,9 @@ defmodule CrawlexirWeb.Router do
       singleton: true
 
     get "/", DashboardController, :index
+
+    resources "/keywords", KeywordController, only: [:show]
+    resources "/reports", ReportController, only: [:show]
   end
 
   # Other scopes may use custom stacks.

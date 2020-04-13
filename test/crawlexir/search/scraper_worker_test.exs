@@ -15,7 +15,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
       ScraperWorker.new(job_attributes) |> Oban.insert()
 
       assert %{success: 1, failure: 0} == Oban.drain_queue(:default)
-      assert %Search.Report{} = Search.get_keyword_report(keyword.id)
+      assert %Search.Report{} = Search.get_keyword_report!(keyword.id)
     end
 
     test "perform/1 update the keyword upon success" do

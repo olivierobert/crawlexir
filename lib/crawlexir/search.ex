@@ -29,7 +29,7 @@ defmodule Crawlexir.Search do
   @doc """
   Gets a single keyword.
 
-  Raises `Ecto.NoResultsError` if the Keyword does not exist.
+  Returns nil if the Keyword does not exist.
 
   ## Examples
 
@@ -139,22 +139,40 @@ defmodule Crawlexir.Search do
   end
 
   @doc """
-  Get a keyword report.
+  Gets a single report
+
+  Raises `Ecto.NoResultsError` if the report does not exist.
 
   ## Examples
 
-      iex> get_keyword_report(keyword_id)
+      iex> get_report!(report_id)
       {:ok, %Report{}}
 
-      iex> get_keyword_report(keyword_id)
-      nil
+      iex> get_report!(report_id)
+      ** (Ecto.NoResultsError)
 
   """
-  def get_keyword_report(keyword_id) do
+  def get_report!(id), do: Repo.get!(Report, id)
+
+  @doc """
+  Gets a single report by keyword ID.
+
+  Raises `Ecto.NoResultsError` if the report does not exist.
+
+  ## Examples
+
+      iex> get_keyword_report!(keyword_id)
+      {:ok, %Report{}}
+
+      iex> get_keyword_report!(keyword_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_keyword_report!(keyword_id) do
     Report
     |> where(keyword_id: ^keyword_id)
     |> preload(:keyword)
-    |> Repo.one()
+    |> Repo.one!()
   end
 
   @doc """

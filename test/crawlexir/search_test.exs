@@ -99,19 +99,35 @@ defmodule Crawlexir.SearchTest do
       assert parsed_result == {:ok, ["first_keyword", "second_keyword"]}
     end
 
-    test "get_keyword_report/1 with returns a report with given id" do
+    test "get_report!/1 returns a report with given id" do
+      keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
+      report = ReportFactory.insert!(:report, keyword_id: keyword.id)
+
+      assert %Report{} = Search.get_report!(report.id)
+    end
+
+    test "get_report!/1 with invalid data raises an error" do
+      non_existing_id = 1
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Search.get_report!(non_existing_id)
+      end
+    end
+
+    test "get_keyword_report!/1 returns a report with given keyword id" do
       keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
       ReportFactory.insert!(:report, keyword_id: keyword.id)
 
-      fetched_report = Search.get_keyword_report(keyword.id)
-
+      assert %Report{} = fetched_report = Search.get_keyword_report!(keyword.id)
       assert fetched_report.keyword.keyword == "amazing job"
     end
 
-    test "get_keyword_report/1 with invalid data returns nil" do
+    test "get_keyword_report!/1 with invalid data raises an error" do
       non_existing_id = 1
 
-      assert Search.get_keyword_report(non_existing_id) == nil
+      assert_raise Ecto.NoResultsError, fn ->
+        Search.get_keyword_report!(non_existing_id)
+      end
     end
 
     test "create_keyword_report/1 with valid data returns a report" do

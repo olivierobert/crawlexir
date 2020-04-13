@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= render_many(@keywords, CrawlexirWeb.KeywordView, "keyword.html") %>
+        <%= render_many(@keywords, CrawlexirWeb.KeywordView, "_keyword.html", assigns) %>
       </tbody>
     </table>
   <% else %>
