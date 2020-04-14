@@ -16,7 +16,7 @@ defmodule CrawlexirWeb.Router do
   end
 
   scope "/", CrawlexirWeb do
-    pipe_through [:browser, Plugs.Guest]
+    pipe_through [:browser, EnsureAnonymous]
 
     resources "/registrations", RegistrationController,
       only: [:new, :create],
@@ -28,7 +28,7 @@ defmodule CrawlexirWeb.Router do
   end
 
   scope "/", CrawlexirWeb do
-    pipe_through [:browser, Plugs.Auth]
+    pipe_through [:browser, EnsureAuthentication]
 
     resources "/sessions", SessionController,
       only: [:delete],
