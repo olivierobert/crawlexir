@@ -3,5 +3,4 @@
 
 ExUnit.start()
 Ecto.Adapters.SQL.Sandbox.mode(Crawlexir.Repo, :manual)
-Application.start(:ex_unit)
 Faker.start()
