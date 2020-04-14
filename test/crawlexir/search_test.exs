@@ -5,19 +5,19 @@ defmodule Crawlexir.SearchTest do
   alias Crawlexir.Search
   alias Crawlexir.Search.{Keyword, Report, ScraperWorker}
 
-  alias Crawlexir.KeywordFactory
-  alias Crawlexir.ReportFactory
-  alias Crawlexir.UserFactory
-
-  describe "search" do
-    test "list_keywords/0 returns all keywords" do
-      keyword = KeywordFactory.insert!(:keyword_with_user)
+  describe "list_keywords/0" do
+    test "returns all keywords" do
+      user = insert(:user)
+      keyword = insert(:keyword, user_id: user.id)
 
       assert Search.list_keywords() == [keyword]
     end
+  end
 
-    test "get_keyword/1 returns the keyword with given id" do
-      keyword = KeywordFactory.insert!(:keyword_with_user)
+  describe "get_keyword/1" do
+    test "returns the keyword with given id" do
+      user = insert(:user)
+      keyword = insert(:keyword, keyword: "amazing job", user_id: user.id)
 
       assert Search.get_keyword(keyword.id) == keyword
     end
@@ -27,47 +27,28 @@ defmodule Crawlexir.SearchTest do
 
       assert Search.get_keyword(non_existing_id) == nil
     end
+  end
 
-    test "create_keyword/1 with valid data creates a keyword" do
-      user = UserFactory.insert!(:user)
-      keyword_attributes = KeywordFactory.build_attributes(:keyword, keyword: "amazing job")
+  describe "create_keyword/2" do
+    test "creates a keyword given valid data" do
+      user = insert(:user)
+      keyword_attributes = params_for(:keyword, keyword: "amazing job")
 
-      assert {:ok, %Keyword{} = keyword} = Search.create_keyword(user, keyword_attributes)
-      assert keyword.keyword == "amazing job"
+      assert {:ok, %Keyword{} = created_keyword} = Search.create_keyword(user, keyword_attributes)
+      assert created_keyword.keyword == "amazing job"
     end
 
-    test "create_keyword/1 with invalid data returns an error changeset" do
-      user = UserFactory.insert!(:user)
-      keyword_attributes = KeywordFactory.build_attributes(:keyword, keyword: nil)
+    test "returns an error changeset given invalid data" do
+      user = insert(:user)
+      keyword_attributes = params_for(:keyword, %{keyword: nil})
 
       assert {:error, %Ecto.Changeset{}} = Search.create_keyword(user, keyword_attributes)
     end
+  end
 
-    test "list_user_keyword/1 with valid data returns the list of keyword given a user ID" do
-      user = UserFactory.insert!(:user)
-      user_keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
-      _other_user_keyword = KeywordFactory.insert!(:keyword_with_user)
-
-      assert Search.list_user_keyword(user.id) == [user_keyword]
-    end
-
-    test "create_keyword/1 returns nil given a user has no keyword" do
-      user = UserFactory.insert!(:user)
-      _other_user_keyword = KeywordFactory.insert!(:keyword_with_user)
-
-      assert Search.list_user_keyword(user.id) == []
-    end
-
-    test "search_for_keyword/1 with valid data creates a keyword" do
-      user = UserFactory.insert!(:user)
-      keyword_attributes = KeywordFactory.build_attributes(:keyword)
-
-      assert {:ok, %{keyword: keyword, worker: _job}} =
-               Search.search_for_keyword(user, keyword_attributes)
-    end
-
-    test "update_keyword_status/1 with a valid status returns the updated keyword" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, status: :pending)
+  describe "update_keyword_status/2" do
+    test "returns the updated keyword given a valid status" do
+      keyword = insert(:keyword_with_user, status: :pending)
 
       assert {:ok, %Keyword{} = updated_keyword} =
                Search.update_keyword_status(keyword, :completed)
@@ -75,72 +56,107 @@ defmodule Crawlexir.SearchTest do
       assert updated_keyword.status == :completed
     end
 
-    test "update_keyword_status/1 with an valid status returns an error changeset" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, status: :pending)
+    test "returns an error changeset given an invalid status" do
+      keyword = insert(:keyword_with_user, status: :pending)
 
       assert {:error, %Ecto.Changeset{}} = Search.update_keyword_status(keyword, :invalid)
     end
+  end
 
-    test "search_for_keyword/1 with valid data schedule a background job" do
-      user = UserFactory.insert!(:user)
-      keyword_attributes = KeywordFactory.build_attributes(:keyword)
+  describe "list_user_keyword/1" do
+    test "returns the list of keyword given a user ID" do
+      user = insert(:user)
+      user_keyword = insert(:keyword, user_id: user.id)
+      _other_user_keyword = insert(:keyword_with_user)
+
+      assert Search.list_user_keyword(user.id) == [user_keyword]
+    end
+
+    test "returns nil given a user has no keyword" do
+      user = insert(:user)
+      _other_user_keyword = insert(:keyword_with_user)
+
+      assert Search.list_user_keyword(user.id) == []
+    end
+  end
+
+  describe "search_for_keyword/1" do
+    test "creates a keyword given valid data" do
+      user = insert(:user)
+      keyword_attributes = params_for(:keyword)
+
+      assert {:ok, %{keyword: keyword, worker: _job}} =
+               Search.search_for_keyword(user, keyword_attributes)
+    end
+
+    test "schedules a background job given valid data" do
+      user = insert(:user)
+      keyword_attributes = params_for(:keyword)
 
       assert {:ok, %{keyword: keyword, worker: _job}} =
                Search.search_for_keyword(user, keyword_attributes)
 
       assert_enqueued(worker: ScraperWorker, args: %{keyword_id: keyword.id})
     end
+  end
 
-    test "parse_keyword_file/1 with a valid CSV file returns a list of keyword" do
+  describe "parse_keyword_file/1" do
+    test "returns a list of keyword given a valid CSV file" do
       valid_file = Path.expand("../fixtures/assets/valid-keyword.csv", __DIR__)
 
       parsed_result = Search.parse_keyword_file(valid_file)
 
       assert parsed_result == {:ok, ["first_keyword", "second_keyword"]}
     end
+  end
 
-    test "get_report!/1 returns a report with given id" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
-      report = ReportFactory.insert!(:report, keyword_id: keyword.id)
+  describe "get_report!/1" do
+    test "returns a report with given id" do
+      keyword = insert(:keyword_with_user, keyword: "amazing job")
+      report = insert(:report, keyword: keyword)
 
       assert %Report{} = Search.get_report!(report.id)
     end
 
-    test "get_report!/1 with invalid data raises an error" do
+    test "raises an error given invalid data" do
       non_existing_id = 1
 
       assert_raise Ecto.NoResultsError, fn ->
         Search.get_report!(non_existing_id)
       end
     end
+  end
 
-    test "get_keyword_report!/1 returns a report with given keyword id" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
-      ReportFactory.insert!(:report, keyword_id: keyword.id)
+  describe "get_keyword_report!/1" do
+    test "returns a report with given keyword id" do
+      keyword = insert(:keyword_with_user, keyword: "amazing job")
+      insert(:report, keyword: keyword)
 
       assert %Report{} = fetched_report = Search.get_keyword_report!(keyword.id)
       assert fetched_report.keyword.keyword == "amazing job"
     end
 
-    test "get_keyword_report!/1 with invalid data raises an error" do
+    test "raises an error given invalid data " do
       non_existing_id = 1
 
       assert_raise Ecto.NoResultsError, fn ->
         Search.get_keyword_report!(non_existing_id)
       end
     end
+  end
 
-    test "create_keyword_report/1 with valid data returns a report" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
-      report_attributes = ReportFactory.build_attributes(:report)
+  describe "create_keyword_report!/2" do
+    test "returns a report given valid data" do
+      keyword = insert(:keyword_with_user, keyword: "amazing job")
+      report_attributes = params_for(:report)
 
       assert {:ok, %Report{} = report} = Search.create_keyword_report(keyword, report_attributes)
       assert report.keyword_id == keyword.id
     end
 
-    test "create_keyword_report/1 with in valid returns an error changeset" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "amazing job")
-      report_attributes = ReportFactory.build_attributes(:report, link_count: nil)
+    test "returns an error changeset given invalid data" do
+      keyword = insert(:keyword_with_user, keyword: "amazing job")
+      report_attributes = params_for(:report, link_count: nil)
 
       assert {:error, %Ecto.Changeset{}} =
                Search.create_keyword_report(keyword, report_attributes)

@@ -1,40 +1,44 @@
 defmodule Crawlexir.Search.ReportTest do
   use Crawlexir.DataCase, async: true
 
-  alias Crawlexir.Search.Report
-
-  alias Crawlexir.ReportFactory
+  alias Crawlexir.Search.{Keyword, Report}
 
   describe "changeset" do
     test "requires the content fields" do
       attributes =
-        ReportFactory.build_attributes(
-          :report,
+        params_for(:report, %{
           advertiser_link_count: nil,
           advertiser_url_list: nil,
           organic_link_count: nil,
           organic_url_list: nil,
           link_count: nil,
-          html_content: nil
-        )
+          html_content: nil,
+          keyword_id: nil
+        })
 
       changeset = Report.changeset(%Report{}, attributes)
 
       refute changeset.valid?
-      assert %{advertiser_link_count: ["can't be blank"]} = errors_on(changeset)
-      assert %{advertiser_url_list: ["can't be blank"]} = errors_on(changeset)
-      assert %{organic_link_count: ["can't be blank"]} = errors_on(changeset)
-      assert %{organic_url_list: ["can't be blank"]} = errors_on(changeset)
-      assert %{link_count: ["can't be blank"]} = errors_on(changeset)
-      assert %{html_content: ["can't be blank"]} = errors_on(changeset)
+
+      assert errors_on(changeset) == %{
+               advertiser_link_count: ["can't be blank"],
+               advertiser_url_list: ["can't be blank"],
+               organic_link_count: ["can't be blank"],
+               organic_url_list: ["can't be blank"],
+               link_count: ["can't be blank"],
+               html_content: ["can't be blank"],
+               keyword_id: ["can't be blank"]
+             }
     end
 
     test "requires a valid keyword" do
-      non_existing_id = 1
+      keyword = insert(:keyword_with_user)
+      attributes = params_for(:report, %{keyword_id: keyword.id})
 
-      assert_raise Ecto.ConstraintError, fn ->
-        ReportFactory.insert!(:report, keyword_id: non_existing_id)
-      end
+      Repo.delete_all(Keyword)
+
+      assert {:error, changeset} = Report.changeset(%Report{}, attributes) |> Repo.insert()
+      assert errors_on(changeset) == %{keyword: ["does not exist"]}
     end
   end
 end

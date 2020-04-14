@@ -1,15 +1,14 @@
 defmodule CrawlexirWeb.DashboardControllerTest do
   use CrawlexirWeb.ConnCase, async: true
 
-  alias Crawlexir.{UserFactory, KeywordFactory}
-
   describe "GET /" do
     test "lists all user keywords", %{conn: conn} do
-      user = UserFactory.insert!(:user)
-      keyword = KeywordFactory.insert!(:keyword, user_id: user.id)
+      user = insert(:user)
+      keyword = insert(:keyword, user_id: user.id)
 
       conn =
-        authenticated_conn(user)
+        conn
+        |> assign_user(user)
         |> get(Routes.dashboard_path(conn, :index))
 
       assert html_response(conn, 200) =~ "Dashboard"

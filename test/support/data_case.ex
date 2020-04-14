@@ -24,6 +24,9 @@ defmodule Crawlexir.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Crawlexir.DataCase
+
+      # Factories
+      import Crawlexir.Factory
     end
   end
 

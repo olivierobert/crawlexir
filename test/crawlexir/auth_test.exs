@@ -2,27 +2,22 @@ defmodule Crawlexir.AuthTest do
   use Crawlexir.DataCase
 
   alias Crawlexir.Auth
+  alias Crawlexir.Auth.User
 
-  alias Crawlexir.UserFactory
-
-  describe "auth" do
-    alias Crawlexir.Auth.User
-
-    test "get_user!/1 returns the user with given id" do
-      user = UserFactory.insert!(:user, email: "jean@bon.com")
+  describe "get_user!/1" do
+    test "returns the user given a valid id" do
+      user = insert(:user, email: "jean@bon.com")
 
       created_user = Auth.get_user!(user.id)
 
       assert created_user.email == "jean@bon.com"
     end
+  end
 
-    test "create_user/1 with valid data creates a new user" do
+  describe "create_user/1" do
+    test "creates a new user given valid data" do
       user_attributes =
-        UserFactory.build_attributes(:user,
-          email: "jean@bon.com",
-          first_name: "Jean",
-          last_name: "Bon"
-        )
+        params_for(:user, email: "jean@bon.com", first_name: "Jean", last_name: "Bon")
 
       assert {:ok, %User{} = user} = Auth.create_user(user_attributes)
       assert user.email == "jean@bon.com"
@@ -30,31 +25,27 @@ defmodule Crawlexir.AuthTest do
       assert user.last_name == "Bon"
     end
 
-    test "create_user/1 with invalid data returns error changeset" do
-      user_attributes = UserFactory.build_attributes(:user, email: nil)
+    test "returns error changeset given invalid data" do
+      user_attributes = params_for(:user, email: nil)
 
       assert {:error, %Ecto.Changeset{}} = Auth.create_user(user_attributes)
     end
+  end
 
-    test "login_user/2 with valid data returns the user" do
-      user_attributes =
-        UserFactory.build_attributes(:user, email: "jean@bon.com", password: "12345678")
-
-      Auth.create_user(user_attributes)
+  describe "login_user/2" do
+    test "returns the user given valid user and credentials" do
+      insert(:user, email: "jean@bon.com", password: "12345678")
 
       assert {:ok, %User{}} = Auth.login_user("jean@bon.com", "12345678")
     end
 
-    test "login_user/2 with invalid password returns an error" do
-      user_attributes =
-        UserFactory.build_attributes(:user, email: "jean@bon.com", password: "12345678")
-
-      Auth.create_user(user_attributes)
+    test "returns an error given an invalid password " do
+      insert(:user, email: "jean@bon.com", password: "12345678")
 
       assert {:error, :unauthorized} = Auth.login_user("jean@bon.com", "invalid")
     end
 
-    test "login_user/2 for a non-existing user returns an error" do
+    test "returns an error for a non-existing user" do
       assert {:error, :unauthorized} = Auth.login_user("unknown@user.com", "invalid")
     end
   end

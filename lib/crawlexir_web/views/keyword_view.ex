@@ -7,7 +7,7 @@ defmodule CrawlexirWeb.KeywordView do
     link(keyword.keyword, to: Routes.keyword_path(conn, :show, keyword.id))
   end
 
-  def keyword_text_or_link(conn, %Keyword{} = keyword), do: keyword.keyword
+  def keyword_text_or_link(_, %Keyword{} = keyword), do: keyword.keyword
 
   def status_text(%Keyword{status: :pending}), do: "Pending"
   def status_text(%Keyword{status: :in_progress}), do: "Processing"
