@@ -1,5 +1,5 @@
 defmodule CrawlexirWeb.SessionControllerTest do
-  use CrawlexirWeb.ConnCase
+  use CrawlexirWeb.ConnCase, async: true
   use Plug.Test
 
   describe "GET /sessions" do

@@ -8,7 +8,8 @@ defmodule CrawlexirWeb.KeywordControllerTest do
       insert(:report, keyword: keyword)
 
       conn =
-        authenticated_conn(user)
+        conn
+        |> assign_user(user)
         |> get(Routes.keyword_path(conn, :show, keyword.id))
 
       assert html_response(conn, 200) =~ "Report for \"#{keyword.keyword}\""

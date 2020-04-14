@@ -1,5 +1,5 @@
 defmodule CrawlexirWeb.RegistrationControllerTest do
-  use CrawlexirWeb.ConnCase
+  use CrawlexirWeb.ConnCase, async: true
 
   describe "GET /registrations" do
     test "renders form", %{conn: conn} do

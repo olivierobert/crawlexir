@@ -23,31 +23,13 @@ defmodule CrawlexirWeb.ConnCase do
       use Phoenix.ConnTest
       alias CrawlexirWeb.Router.Helpers, as: Routes
 
-      # The default endpoint for testing
-      @endpoint CrawlexirWeb.Endpoint
+      import Crawlexir.ConnHelpers
 
       # Factories
       import Crawlexir.Factory
 
-      # TODO: refactor to keep only one method accepting a user
-      def authenticated_conn() do
-        user_attributes = %{
-          email: "jean@bon.com",
-          first_name: "Jean",
-          last_name: "Bon",
-          password: "12345678"
-        }
-
-        {:ok, user} = Crawlexir.Auth.create_user(user_attributes)
-
-        build_conn()
-        |> Plug.Test.init_test_session(current_user_id: user.id)
-      end
-
-      def authenticated_conn(user) do
-        build_conn()
-        |> Plug.Test.init_test_session(current_user_id: user.id)
-      end
+      # The default endpoint for testing
+      @endpoint CrawlexirWeb.Endpoint
     end
   end
 

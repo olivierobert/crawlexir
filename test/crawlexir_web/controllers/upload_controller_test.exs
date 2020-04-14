@@ -1,12 +1,13 @@
 defmodule CrawlexirWeb.UploadControllerTest do
-  use CrawlexirWeb.ConnCase
+  use CrawlexirWeb.ConnCase, async: true
 
   alias Crawlexir.Search
 
   describe "GET /uploads" do
     test "renders form", %{conn: conn} do
       conn =
-        authenticated_conn()
+        conn
+        |> assign_user()
         |> get(Routes.upload_path(conn, :new))
 
       assert html_response(conn, 200) =~ "CSV File"
@@ -21,7 +22,8 @@ defmodule CrawlexirWeb.UploadControllerTest do
       }
 
       conn =
-        authenticated_conn()
+        conn
+        |> assign_user()
         |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
 
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
@@ -34,7 +36,8 @@ defmodule CrawlexirWeb.UploadControllerTest do
         filename: "valid-keyword.csv"
       }
 
-      authenticated_conn()
+      conn
+      |> assign_user()
       |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
 
       keywords = Search.list_keywords()
@@ -51,7 +54,8 @@ defmodule CrawlexirWeb.UploadControllerTest do
       }
 
       conn =
-        authenticated_conn()
+        conn
+        |> assign_user()
         |> post(Routes.upload_path(conn, :create), %{"upload" => %{"csv_file" => csv_upload}})
 
       assert get_flash(conn, :error) =~ "No valid keyword found"
@@ -59,7 +63,8 @@ defmodule CrawlexirWeb.UploadControllerTest do
 
     test "shows an error given no file", %{conn: conn} do
       conn =
-        authenticated_conn()
+        conn
+        |> assign_user()
         |> post(Routes.upload_path(conn, :create), %{})
 
       assert get_flash(conn, :error) =~ "No file was submitted"
