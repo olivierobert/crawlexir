@@ -2,33 +2,37 @@ defmodule CrawlexirWeb.AuthPlugTest do
   use CrawlexirWeb.ConnCase
   use Plug.Test
 
-  alias Crawlexir.Auth
+  alias CrawlexirWeb.Plugs.Auth
+  alias CrawlexirWeb.Router.Helpers, as: Routes
 
-  test "given current_user_id is assigned, it passes through" do
-    user_attributes = %{
-      email: "jean@bon.com",
-      first_name: "Jean",
-      last_name: "Bon",
-      password: "12345678"
-    }
-
-    {:ok, user} = Auth.create_user(user_attributes)
-
-    conn =
-      build_conn()
-      |> init_test_session(current_user_id: user.id)
-      |> get("/")
-
-    assert conn.status == 200
-    assert conn.request_path == "/"
+  describe "init/1" do
+    test "returns given options" do
+      assert Auth.init([]) == []
+    end
   end
 
-  test "given current_user_id is NOT assigned, it redirects a user" do
-    conn =
-      build_conn()
-      |> init_test_session(current_user_id: nil)
-      |> get("/")
+  describe "call/2" do
+    test "passes through given an authenticated user" do
+      user = insert(:user)
 
-    assert redirected_to(conn) == "/sessions/new"
+      conn =
+        build_conn()
+        |> init_test_session(current_user_id: user.id)
+        |> Auth.call(%{})
+
+      refute conn.halted
+    end
+
+    test "redirects given an unauthenticated user" do
+      conn =
+        build_conn()
+        |> init_test_session(current_user_id: nil)
+        |> fetch_flash()
+        |> Auth.call(%{})
+
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+
   end
 end

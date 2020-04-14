@@ -1,35 +1,20 @@
 defmodule Crawlexir.KeywordFactory do
-  use Crawlexir.FactoryBase
-
-  alias Crawlexir.Search
   alias Crawlexir.Search.Keyword
 
-  alias Crawlexir.UserFactory
+  defmacro __using__(_opts) do
+    quote do
+      def keyword_factory do
+        %Keyword{
+          keyword: Faker.Lorem.word()
+        }
+      end
 
-  def build(:keyword) do
-    %Keyword{
-      keyword: Faker.Lorem.word()
-    }
-  end
-
-  def build(:keyword_with_user) do
-    user = UserFactory.insert!(:user)
-
-    build(:keyword) |> Map.replace!(:user_id, user.id)
-  end
-
-  def insert!(:keyword, attributes \\ %{}) do
-    user = attributes[:user] || UserFactory.insert!(:user)
-
-    case Search.create_keyword(user, build_attributes(:keyword, attributes)) do
-      {:ok, keyword} -> keyword
-      {:error, changeset} -> {:error, changeset}
+      def keyword_with_user_factory do
+        %Keyword{
+          keyword: Faker.Lorem.word(),
+          user: build(:user)
+        }
+      end
     end
-  end
-
-  def insert!(:keyword_with_user, attributes) do
-    user = UserFactory.insert!(:user)
-    {:ok, keyword} = Search.create_keyword(user, build_attributes(:keyword, attributes))
-    keyword
   end
 end

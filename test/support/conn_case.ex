@@ -26,6 +26,9 @@ defmodule CrawlexirWeb.ConnCase do
       # The default endpoint for testing
       @endpoint CrawlexirWeb.Endpoint
 
+      # Factories
+      import Crawlexir.Factory
+
       # TODO: refactor to keep only one method accepting a user
       def authenticated_conn() do
         user_attributes = %{

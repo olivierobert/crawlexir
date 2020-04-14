@@ -5,11 +5,9 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
   alias Crawlexir.Search
   alias Crawlexir.Search.ScraperWorker
 
-  alias Crawlexir.KeywordFactory
-
   describe "perform" do
     test "perform/1 creates a report" do
-      keyword = KeywordFactory.insert!(:keyword_with_user)
+      keyword = insert(:keyword_with_user)
       job_attributes = %{keyword_id: keyword.id}
 
       ScraperWorker.new(job_attributes) |> Oban.insert()
@@ -19,7 +17,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
     end
 
     test "perform/1 update the keyword upon success" do
-      keyword = KeywordFactory.insert!(:keyword_with_user)
+      keyword = insert(:keyword_with_user)
       job_attributes = %{keyword_id: keyword.id}
 
       ScraperWorker.new(job_attributes) |> Oban.insert()
@@ -31,7 +29,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
     end
 
     test "perform/1 returns an error upon scraping error" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "keyword error")
+      keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
       job_attributes = %{keyword_id: keyword.id}
 
       ScraperWorker.new(job_attributes) |> Oban.insert()
@@ -40,7 +38,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
     end
 
     test "perform/1 update the keyword upon failure" do
-      keyword = KeywordFactory.insert!(:keyword_with_user, keyword: "keyword error")
+      keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
       job_attributes = %{keyword_id: keyword.id}
 
       ScraperWorker.new(job_attributes) |> Oban.insert()

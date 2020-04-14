@@ -5,9 +5,6 @@ defmodule Crawlexir.Search.Keyword do
   alias Crawlexir.Auth.User
   alias Crawlexir.Search.{Report, ScrapingStatusEnum}
 
-  @permitted_field ~w(keyword status)a
-  @required_field ~w(keyword)a
-
   schema "keywords" do
     field :keyword, :string
     field :status, ScrapingStatusEnum, default: :pending
@@ -21,8 +18,8 @@ defmodule Crawlexir.Search.Keyword do
   @doc false
   def changeset(keyword, attrs) do
     keyword
-    |> cast(attrs, @permitted_field)
+    |> cast(attrs, [:keyword, :status, :user_id])
+    |> validate_required([:keyword, :user_id])
     |> assoc_constraint(:user)
-    |> validate_required(@required_field)
   end
 end

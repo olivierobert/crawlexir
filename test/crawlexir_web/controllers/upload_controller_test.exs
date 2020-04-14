@@ -3,7 +3,7 @@ defmodule CrawlexirWeb.UploadControllerTest do
 
   alias Crawlexir.Search
 
-  describe "#new" do
+  describe "GET /uploads" do
     test "renders form", %{conn: conn} do
       conn =
         authenticated_conn()
@@ -13,8 +13,8 @@ defmodule CrawlexirWeb.UploadControllerTest do
     end
   end
 
-  describe "#create" do
-    test "given a valid file, it redirects to the dashboard", %{conn: conn} do
+  describe "POST /uploads" do
+    test "redirects to the dashboard given a valid file", %{conn: conn} do
       csv_upload = %Plug.Upload{
         path: "test/fixtures/assets/valid-keyword.csv",
         filename: "valid-keyword.csv"
@@ -28,7 +28,7 @@ defmodule CrawlexirWeb.UploadControllerTest do
       assert get_flash(conn, :info) =~ "File uploaded successfully"
     end
 
-    test "given a valid file, it save the keywords", %{conn: conn} do
+    test "creates keywords given a valid file", %{conn: conn} do
       csv_upload = %Plug.Upload{
         path: "test/fixtures/assets/valid-keyword.csv",
         filename: "valid-keyword.csv"
@@ -44,7 +44,7 @@ defmodule CrawlexirWeb.UploadControllerTest do
       assert List.last(keywords).keyword == "second_keyword"
     end
 
-    test "given an invalid file, it shows an error", %{conn: conn} do
+    test "shows an error given an invalid file", %{conn: conn} do
       csv_upload = %Plug.Upload{
         path: "test/fixtures/assets/invalid-keyword.csv",
         filename: "invalid-keyword.csv"
@@ -57,7 +57,7 @@ defmodule CrawlexirWeb.UploadControllerTest do
       assert get_flash(conn, :error) =~ "No valid keyword found"
     end
 
-    test "given no file, it shows an error", %{conn: conn} do
+    test "shows an error given no file", %{conn: conn} do
       conn =
         authenticated_conn()
         |> post(Routes.upload_path(conn, :create), %{})

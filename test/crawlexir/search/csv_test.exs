@@ -9,7 +9,7 @@ defmodule Crawlexir.Search.CsvTest do
 
       parsed_result = Csv.parse(valid_file)
 
-      assert parsed_result == {:ok, ["first_keyword", "second_keyword"]}
+      assert {:ok, ["first_keyword", "second_keyword"]} = parsed_result
     end
 
     test "parse/1 returns an error given a CSV file that does NOT follow the template" do
@@ -17,7 +17,7 @@ defmodule Crawlexir.Search.CsvTest do
 
       parsed_result = Csv.parse(invalid_csv_file)
 
-      assert parsed_result == {:error, "Invalid CSV format"}
+      assert {:error, "Invalid CSV format"} = parsed_result
     end
 
     test "parse/1 returns an error given an invalid file" do
@@ -25,7 +25,7 @@ defmodule Crawlexir.Search.CsvTest do
 
       parsed_result = Csv.parse(image_file)
 
-      assert parsed_result == {:error, "File cannot be parsed"}
+      assert {:error, "File cannot be parsed"} = parsed_result
     end
   end
 end

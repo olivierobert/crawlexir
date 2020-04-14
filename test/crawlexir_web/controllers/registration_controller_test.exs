@@ -1,24 +1,19 @@
 defmodule CrawlexirWeb.RegistrationControllerTest do
   use CrawlexirWeb.ConnCase
 
-  @create_attrs %{
-    email: "jean@bon.com",
-    first_name: "Jean",
-    last_name: "Bon",
-    password: "12345678"
-  }
-  @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil}
-
-  describe "#new" do
+  describe "GET /registrations" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.registration_path(conn, :new))
+
       assert html_response(conn, 200) =~ "Sign up"
     end
   end
 
-  describe "#create" do
-    test "given valid attributes, it redirects to the dashboard", %{conn: conn} do
-      conn = post(conn, Routes.registration_path(conn, :create), user: @create_attrs)
+  describe "POST /registrations" do
+    test "redirects to the dashboard given valid attributes", %{conn: conn} do
+      user_attributes = params_for(:user)
+
+      conn = post(conn, Routes.registration_path(conn, :create), user: user_attributes)
 
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
 
@@ -26,8 +21,10 @@ defmodule CrawlexirWeb.RegistrationControllerTest do
       assert html_response(conn, 200) =~ "User created successfully."
     end
 
-    test "given invalid attributes, it renders errors", %{conn: conn} do
-      conn = post(conn, Routes.registration_path(conn, :create), user: @invalid_attrs)
+    test "renders errors given invalid attributes", %{conn: conn} do
+      user_attributes = params_for(:user, email: nil)
+
+      conn = post(conn, Routes.registration_path(conn, :create), user: user_attributes)
 
       assert html_response(conn, 200) =~
                "Oops, something went wrong! Please check the errors below."

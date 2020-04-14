@@ -1,13 +1,11 @@
 defmodule CrawlexirWeb.KeywordControllerTest do
   use CrawlexirWeb.ConnCase, async: true
 
-  alias Crawlexir.{KeywordFactory, UserFactory, ReportFactory}
-
   describe "GET /keywords/:id" do
     test "renders the keyword report", %{conn: conn} do
-      user = UserFactory.insert!(:user)
-      keyword = KeywordFactory.insert!(:keyword, user: user)
-      ReportFactory.insert!(:report, keyword: keyword)
+      user = insert(:user)
+      keyword = insert(:keyword, user: user)
+      insert(:report, keyword: keyword)
 
       conn =
         authenticated_conn(user)

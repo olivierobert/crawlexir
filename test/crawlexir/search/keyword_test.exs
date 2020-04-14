@@ -1,27 +1,31 @@
 defmodule Crawlexir.Search.KeywordTest do
   use Crawlexir.DataCase, async: true
 
+  alias Crawlexir.Auth.User
   alias Crawlexir.Search.Keyword
-
-  alias Crawlexir.{KeywordFactory, UserFactory}
 
   describe "changeset" do
     test "requires the keyword field" do
-      attributes = KeywordFactory.build_attributes(:keyword, keyword: nil)
+      attributes = params_for(:keyword, %{keyword: nil})
+
       changeset = Keyword.changeset(%Keyword{}, attributes)
 
       refute changeset.valid?
-      assert %{keyword: ["can't be blank"]} = errors_on(changeset)
+
+      assert errors_on(changeset) == %{
+               keyword: ["can't be blank"],
+               user_id: ["can't be blank"]
+             }
     end
 
     test "requires a valid user" do
-      user = UserFactory.insert!(:user)
-      attributes = KeywordFactory.build_attributes(:keyword, user: user)
+      user = insert(:user)
+      attributes = params_for(:keyword, %{user_id: user.id})
 
-      Crawlexir.Repo.delete_all(Crawlexir.Auth.User)
+      Repo.delete_all(User)
 
-      assert {:error, changeset} = KeywordFactory.insert!(:keyword, attributes)
-      assert %{user: ["does not exist"]} = errors_on(changeset)
+      assert {:error, changeset} = Keyword.changeset(%Keyword{}, attributes) |> Repo.insert()
+      assert errors_on(changeset) == %{user: ["does not exist"]}
     end
   end
 end
