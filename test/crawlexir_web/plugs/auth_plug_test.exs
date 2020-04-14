@@ -33,6 +33,5 @@ defmodule CrawlexirWeb.AuthPlugTest do
       assert conn.halted
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
-
   end
 end

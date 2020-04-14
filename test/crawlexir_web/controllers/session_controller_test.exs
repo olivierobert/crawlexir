@@ -15,8 +15,7 @@ defmodule CrawlexirWeb.SessionControllerTest do
       user = insert(:user, email: "jean@bon.com", password: "12345678")
       sign_in_attributes = %{"email" => "jean@bon.com", "password" => "12345678"}
 
-      conn =
-        post(conn, Routes.session_path(conn, :create), sign_in_attributes)
+      conn = post(conn, Routes.session_path(conn, :create), sign_in_attributes)
 
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
       assert get_flash(conn, :success) == "Howdy #{user.first_name}"
@@ -26,8 +25,7 @@ defmodule CrawlexirWeb.SessionControllerTest do
       insert(:user, email: "jean@bon.com", password: "12345678")
       sign_in_attributes = %{"email" => "jean@bon.com", "password" => "invalid"}
 
-      conn =
-        post(conn, Routes.session_path(conn, :create), sign_in_attributes)
+      conn = post(conn, Routes.session_path(conn, :create), sign_in_attributes)
 
       assert get_flash(conn, :error) == "The credentials you provided are not correct."
     end

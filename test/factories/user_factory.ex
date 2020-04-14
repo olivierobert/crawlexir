@@ -3,7 +3,6 @@ defmodule Crawlexir.UserFactory do
 
   defmacro __using__(_opts) do
     quote do
-
       alias Crawlexir.Auth.Password
 
       def user_factory(attrs) do
