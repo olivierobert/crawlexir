@@ -1,16 +1,16 @@
-defmodule Crawlexir.Search.ScraperWorkerTest do
+defmodule Crawlexir.Search.WorkerTest do
   use Crawlexir.DataCase, async: true
   use Oban.Testing, repo: Crawlexir.Repo
 
   alias Crawlexir.Search
-  alias Crawlexir.Search.ScraperWorker
+  alias Crawlexir.Search.Worker
 
   describe "perform" do
     test "perform/1 creates a report" do
       keyword = insert(:keyword_with_user)
       job_attributes = %{keyword_id: keyword.id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      Worker.new(job_attributes) |> Oban.insert()
 
       assert %{success: 1, failure: 0} == Oban.drain_queue(:default)
       assert %Search.Report{} = Search.get_keyword_report!(keyword.id)
@@ -20,7 +20,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
       keyword = insert(:keyword_with_user)
       job_attributes = %{keyword_id: keyword.id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      Worker.new(job_attributes) |> Oban.insert()
 
       Oban.drain_queue(:default)
 
@@ -32,7 +32,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
       keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
       job_attributes = %{keyword_id: keyword.id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      Worker.new(job_attributes) |> Oban.insert()
 
       assert %{success: 0, failure: 1} == Oban.drain_queue(:default)
     end
@@ -41,7 +41,7 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
       keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
       job_attributes = %{keyword_id: keyword.id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      Worker.new(job_attributes) |> Oban.insert()
 
       Oban.drain_queue(:default)
 

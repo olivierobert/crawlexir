@@ -1,7 +1,7 @@
-defmodule Crawlexir.Search.ResultPage do
+defmodule Crawlexir.Google.ResultPage do
   defstruct advertising_content: %{}, organic_content: %{}, page_content: %{}, raw_html: nil
 
-  alias Crawlexir.Search.ResultPage
+  alias Crawlexir.Google.ResultPage
 
   @advertiser_selector "li.ads-ad"
   @advertiser_link_selector ".ad_cclk a.V0MxL"

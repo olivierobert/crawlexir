@@ -1,8 +1,8 @@
-defmodule Crawlexir.Search.ScraperTest do
+defmodule Crawlexir.Google.ScraperTest do
   use Crawlexir.DataCase, async: true
 
-  alias Crawlexir.Search.Scraper
-  alias Crawlexir.Search.ResultPage
+  alias Crawlexir.Google.Scraper
+  alias Crawlexir.Google.ResultPage
 
   describe "get" do
     test "get/1 with a valid keyword returns a ResultPage" do

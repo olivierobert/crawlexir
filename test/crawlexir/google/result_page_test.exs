@@ -1,7 +1,7 @@
-defmodule Crawlexir.Search.ResultPageTest do
+defmodule Crawlexir.Google.ResultPageTest do
   use Crawlexir.DataCase, async: true
 
-  alias Crawlexir.Search.ResultPage
+  alias Crawlexir.Google.ResultPage
 
   describe "result page" do
     test "parse/1 with a valid page body returns advertising content" do

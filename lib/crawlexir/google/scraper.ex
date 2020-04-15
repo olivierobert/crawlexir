@@ -1,5 +1,5 @@
-defmodule Crawlexir.Search.Scraper do
-  alias Crawlexir.Search.ResultPage
+defmodule Crawlexir.Google.Scraper do
+  alias Crawlexir.Google.ResultPage
 
   @browser_user_agent [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",

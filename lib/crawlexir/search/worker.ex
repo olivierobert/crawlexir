@@ -1,10 +1,11 @@
-defmodule Crawlexir.Search.ScraperWorker do
+defmodule Crawlexir.Search.Worker do
   use Oban.Worker,
     queue: :default,
     max_attempts: 3
 
   alias Crawlexir.Search
-  alias Crawlexir.Search.{Report, ResultPage, Scraper}
+  alias Crawlexir.Search.Report
+  alias Crawlexir.Google.{ResultPage, Scraper}
 
   @impl Oban.Worker
   def perform(%{"keyword_id" => keyword_id}, _job) do

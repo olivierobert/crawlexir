@@ -3,11 +3,11 @@ defmodule Crawlexir.Search.Keyword do
   import Ecto.Changeset
 
   alias Crawlexir.Auth.User
-  alias Crawlexir.Search.{Report, ScrapingStatusEnum}
+  alias Crawlexir.Search.{KeywordScrapingStatusEnum, Report}
 
   schema "keywords" do
     field :keyword, :string
-    field :status, ScrapingStatusEnum, default: :pending
+    field :status, KeywordScrapingStatusEnum, default: :pending
 
     belongs_to :user, User
     has_one :report, Report
