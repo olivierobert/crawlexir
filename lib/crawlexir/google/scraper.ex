@@ -15,13 +15,13 @@ defmodule Crawlexir.Google.Scraper do
 
   ## Examples
 
-      iex> get("project management apps")
+      iex> scrap("project management apps")
       {:ok, %ResultPage{}}
 
-      iex> get("invalid search")
-      {:error, "Search page cannot be fetched (:nxdomain)"}
+      iex> scrap("invalid search")
+      {:error, "Search page cannot be scraped (:nxdomain)"}
   """
-  def get(keyword) do
+  def scrap(keyword) do
     headers = ["User-Agent": rotated_user_agent()]
 
     case request().get(keyword, headers) do
@@ -29,7 +29,7 @@ defmodule Crawlexir.Google.Scraper do
         ResultPage.parse(body)
 
       {:error, reason} ->
-        {:error, "Search page cannot be fetched (#{reason})"}
+        {:error, "Search page cannot be scraped (#{reason})"}
     end
   end
 

@@ -6,11 +6,11 @@ defmodule Crawlexir.Google.ScraperTest do
 
   describe "get" do
     test "get/1 with a valid keyword returns a ResultPage" do
-      assert {:ok, %ResultPage{} = _result_page} = Scraper.get("project management apps")
+      assert {:ok, %ResultPage{} = _result_page} = Scraper.scrap("project management apps")
     end
 
     test "get/1 with an HTTP error returns an error" do
-      assert {:error, reason} = Scraper.get("keyword error")
+      assert {:error, reason} = Scraper.scrap("keyword error")
     end
   end
 end

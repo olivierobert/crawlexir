@@ -180,10 +180,10 @@ defmodule Crawlexir.Search do
 
   ## Examples
 
-      iex> create_keyword_report(%Keyword{}, %{field: value})
-      {:ok, %Keyword{}}
+      iex> create_keyword_report(%Report{}, %{field: value})
+      {:ok, %Report{}}
 
-      iex> create_keyword((%Keyword{}, %{field: bad_value})
+      iex> create_keyword_report((%Report{}, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
