@@ -31,6 +31,7 @@ defmodule CrawlexirWeb.EnsureAuthenticationTest do
 
       assert conn.halted
       assert redirected_to(conn) == Routes.session_path(conn, :new)
+      assert get_flash(conn, :info) == "You must be logged in to access this page."
     end
   end
 end

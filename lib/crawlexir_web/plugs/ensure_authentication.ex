@@ -15,7 +15,7 @@ defmodule CrawlexirWeb.Plugs.EnsureAuthentication do
 
   defp ensure_authentication(conn, false) do
     conn
-    |> put_flash(:info, "Login into your account.")
+    |> put_flash(:info, "You must be logged in to access this page.")
     |> redirect(to: CrawlexirWeb.Router.Helpers.session_path(conn, :new))
     |> halt()
   end
