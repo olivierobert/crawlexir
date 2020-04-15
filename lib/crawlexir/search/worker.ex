@@ -1,4 +1,15 @@
 defmodule Crawlexir.Search.Worker do
+  @moduledoc """
+  This worker processes the scraping and creation of the scraping report.
+
+  Job errors are stored in the database via Oban with this structure:
+    %{
+      "at" => "2020-04-15T10:36:29.142501Z",
+      "attempt" => 1,
+      "error" => "** (ErlangError) Erlang error: :invalid_keyword_id\n (elixir 1.10.2) lib/process.ex:765: Process.info/2\n
+    }
+  """
+
   use Oban.Worker,
     queue: :default,
     max_attempts: 3

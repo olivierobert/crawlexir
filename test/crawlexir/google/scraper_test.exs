@@ -10,7 +10,7 @@ defmodule Crawlexir.Google.ScraperTest do
     end
 
     test "returns an error when an HTTP error occurs" do
-      assert {:error, reason} = Scraper.scrap("keyword error")
+      assert {:error, _reason} = Scraper.scrap("keyword error")
     end
   end
 end
