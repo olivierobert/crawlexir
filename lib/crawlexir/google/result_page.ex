@@ -1,5 +1,10 @@
 defmodule Crawlexir.Google.ResultPage do
-  defstruct advertising_content: %{}, organic_content: %{}, page_content: %{}, raw_html: nil
+  defstruct advertiser_link_count: 0,
+            advertiser_url_list: [],
+            organic_link_count: 0,
+            organic_url_list: [],
+            link_count: 0,
+            html_content: nil
 
   alias Crawlexir.Google.ResultPage
 
@@ -12,35 +17,36 @@ defmodule Crawlexir.Google.ResultPage do
 
   ## Example
 
-      iex> new("<html><head>< ...")
+      iex> parse("<html><head>< ...")
       {:ok,
        %ResultPage{
-        advertising_content: %{
-          count: 1,
-          url_list: ["https://some-links.com/"]
-        },
-        organic_content: %{
-          count: 1,
-          url_list: ["https://some-links.com/"]
-        },
-        page_content: %{link_count: 100},
-        raw_html:  "<!doctype html><html> <> ..."
+        advertiser_link_count: 1,
+        advertiser_url_list: ["https://some-links.com/"],
+        organic_link_count: 1,
+        organic_url_list: ["https://some-links.com/"],
+        link_count: 100,
+        html_content: "<!doctype html><html> <> ..."
       }
   """
-  def parse(body) do
-    parsed_body = Floki.parse_document!(body)
+  def parse(html) do
+    {:ok, parsed_document} = Floki.parse_document(html)
 
-    {:ok,
-     %ResultPage{
-       advertising_content: get_advertising_content(parsed_body),
-       organic_content: get_organic_content(parsed_body),
-       page_content: get_page_content(parsed_body),
-       raw_html: cleanup_html(body)
-     }}
+    parse_html_content(%ResultPage{}, html)
+    |> parse_advertising_links(parsed_document)
+    |> parse_organic_links(parsed_document)
+    |> parse_links(parsed_document)
+    |> case do
+      %ResultPage{} = result_page -> {:ok, result_page}
+      _ -> {:error, :parsing_error}
+    end
   end
 
-  defp get_advertising_content(parsed_body) do
-    advertiser = parsed_body |> Floki.find(@advertiser_selector)
+  defp parse_html_content(result_page, html) do
+    %{result_page | html_content: cleanup_html(html)}
+  end
+
+  defp parse_advertising_links(result_page, parsed_document) do
+    advertiser = parsed_document |> Floki.find(@advertiser_selector)
 
     advertiser_url_list =
       advertiser
@@ -48,29 +54,37 @@ defmodule Crawlexir.Google.ResultPage do
       |> Enum.map(&Floki.attribute(&1, "href"))
       |> List.flatten()
 
-    %{count: length(advertiser), url_list: advertiser_url_list}
+    %{
+      result_page
+      | advertiser_link_count: length(advertiser),
+        advertiser_url_list: advertiser_url_list
+    }
   end
 
-  defp get_organic_content(parsed_body) do
-    organic_result = parsed_body |> Floki.find(@organic_link_selector)
+  defp parse_organic_links(result_page, parsed_document) do
+    organic_result = parsed_document |> Floki.find(@organic_link_selector)
 
     organic_result_url_list =
       organic_result
       |> Enum.map(&Floki.attribute(&1, "href"))
       |> List.flatten()
 
-    %{count: length(organic_result), url_list: organic_result_url_list}
+    %{
+      result_page
+      | organic_link_count: length(organic_result),
+        organic_url_list: organic_result_url_list
+    }
   end
 
-  defp get_page_content(parsed_body) do
-    links = parsed_body |> Floki.find("a")
+  defp parse_links(result_page, parsed_document) do
+    links = parsed_document |> Floki.find("a")
 
-    %{link_count: length(links)}
+    %{result_page | link_count: length(links)}
   end
 
-  # Remove any non-UTF8 characters from the HTML body.
-  defp cleanup_html(body) do
-    body
+  # Remove any non-UTF8 characters from the HTML html.
+  defp cleanup_html(html) do
+    html
     |> String.chunk(:printable)
     |> Enum.filter(&String.printable?/1)
     |> Enum.join()

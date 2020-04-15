@@ -45,12 +45,12 @@ defmodule Crawlexir.Search.Worker do
 
   defp create_report(%{keyword: keyword, result_page: result_page}) do
     case Search.create_keyword_report(keyword, %{
-           advertiser_link_count: result_page.advertising_content.count,
-           advertiser_url_list: result_page.advertising_content.url_list,
-           organic_link_count: result_page.organic_content.count,
-           organic_url_list: result_page.organic_content.url_list,
-           link_count: result_page.page_content.link_count,
-           html_content: result_page.raw_html
+           advertiser_link_count: result_page.advertiser_link_count,
+           advertiser_url_list: result_page.advertiser_url_list,
+           organic_link_count: result_page.organic_link_count,
+           organic_url_list: result_page.organic_url_list,
+           link_count: result_page.link_count,
+           html_content: result_page.html_content
          }) do
       {:ok, %Report{} = _report} ->
         update_keyword_status(keyword, :completed)
