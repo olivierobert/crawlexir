@@ -46,6 +46,7 @@ defmodule CrawlexirWeb.SessionControllerTest do
       assert get_session(conn, :current_user) == nil
       assert get_session(conn, :user_signed_in?) == nil
       assert redirected_to(conn) == Routes.session_path(conn, :new)
+      assert get_flash(conn, :info) == "You have been signed out successfully."
     end
   end
 end
