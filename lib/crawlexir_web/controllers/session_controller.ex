@@ -28,8 +28,7 @@ defmodule CrawlexirWeb.SessionController do
   def delete(conn, _) do
     conn
     |> clear_session
-    # TODO: Add flash message
-    # |> put_flash(:info, "You've been signed out successfully")
+    |> put_flash(:info, "You have been signed out successfully.")
     |> redirect(to: Routes.session_path(conn, :new))
   end
 end

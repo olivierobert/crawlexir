@@ -7,7 +7,9 @@ defmodule CrawlexirWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_crawlexir_key",
-    signing_salt: "nogekw81"
+    signing_salt: "nogekw81",
+    # 1 day expiration
+    max_age: 24 * 60 * 60
   ]
 
   socket "/socket", CrawlexirWeb.UserSocket,

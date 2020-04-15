@@ -18,7 +18,7 @@ defmodule Crawlexir.Auth.UserTest do
     end
 
     test "email must be of a valid format" do
-      attributes = params_for(:user, email: "jean")
+      attributes = params_for(:user_signup, email: "jean")
 
       changeset = User.changeset(%User{}, attributes)
 
@@ -27,7 +27,7 @@ defmodule Crawlexir.Auth.UserTest do
     end
 
     test "password must be of a minimum length" do
-      attributes = params_for(:user, password: "short")
+      attributes = params_for(:user_signup, password: "short")
 
       changeset = User.changeset(%User{}, attributes)
 
@@ -37,7 +37,7 @@ defmodule Crawlexir.Auth.UserTest do
 
     test "email must be unique" do
       insert(:user, %{email: "jean@bon.com"})
-      attributes = params_for(:user, email: "jean@bon.com")
+      attributes = params_for(:user_signup, email: "jean@bon.com")
 
       assert {:error, changeset} = User.changeset(%User{}, attributes) |> Repo.insert()
 

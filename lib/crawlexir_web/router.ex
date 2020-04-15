@@ -1,7 +1,7 @@
 defmodule CrawlexirWeb.Router do
   use CrawlexirWeb, :router
 
-  alias CrawlexirWeb.Plugs
+  alias CrawlexirWeb.Plugs.{EnsureAnonymous, EnsureAuthentication, SetCurrentUser}
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -9,6 +9,7 @@ defmodule CrawlexirWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug SetCurrentUser
   end
 
   pipeline :api do
@@ -16,7 +17,7 @@ defmodule CrawlexirWeb.Router do
   end
 
   scope "/", CrawlexirWeb do
-    pipe_through [:browser, Plugs.Guest]
+    pipe_through [:browser, EnsureAnonymous]
 
     resources "/registrations", RegistrationController,
       only: [:new, :create],
@@ -28,7 +29,7 @@ defmodule CrawlexirWeb.Router do
   end
 
   scope "/", CrawlexirWeb do
-    pipe_through [:browser, Plugs.Auth]
+    pipe_through [:browser, EnsureAuthentication]
 
     resources "/sessions", SessionController,
       only: [:delete],

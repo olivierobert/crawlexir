@@ -11,14 +11,13 @@ defmodule CrawlexirWeb.RegistrationControllerTest do
 
   describe "POST /registrations" do
     test "redirects to the dashboard given valid attributes", %{conn: conn} do
-      user_attributes = params_for(:user)
+      user_attributes = params_for(:user_signup)
 
       conn = post(conn, Routes.registration_path(conn, :create), user: user_attributes)
-
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
 
       conn = get(conn, Routes.dashboard_path(conn, :index))
-      assert html_response(conn, 200) =~ "User created successfully."
+      assert html_response(conn, 200) =~ "You have signed up successfully."
     end
 
     test "renders errors given invalid attributes", %{conn: conn} do
