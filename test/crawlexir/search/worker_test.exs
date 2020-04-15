@@ -36,7 +36,7 @@ defmodule Crawlexir.Search.WorkerTest do
 
       assert %{success: 0, failure: 1} == Oban.drain_queue(:default)
 
-      job_error = Repo.get(Oban.Job, job.id).errors |> List.first
+      job_error = Repo.get(Oban.Job, job.id).errors |> List.first()
       assert job_error["error"] =~ "error: :invalid_keyword_id"
     end
 
@@ -48,7 +48,7 @@ defmodule Crawlexir.Search.WorkerTest do
 
       assert %{success: 0, failure: 1} == Oban.drain_queue(:default)
 
-      job_error = Repo.get(Oban.Job, job.id).errors |> List.first
+      job_error = Repo.get(Oban.Job, job.id).errors |> List.first()
       assert job_error["error"] =~ "Search page cannot be scraped"
     end
 
