@@ -17,7 +17,12 @@ defmodule Crawlexir.AuthTest do
   describe "create_user/1" do
     test "creates a new user given valid data" do
       user_attributes =
-        params_for(:user, email: "jean@bon.com", first_name: "Jean", last_name: "Bon")
+        params_for(:user_signup,
+          email: "jean@bon.com",
+          first_name: "Jean",
+          last_name: "Bon",
+          password: "12345678"
+        )
 
       assert {:ok, %User{} = user} = Auth.create_user(user_attributes)
       assert user.email == "jean@bon.com"
@@ -26,7 +31,7 @@ defmodule Crawlexir.AuthTest do
     end
 
     test "returns error changeset given invalid data" do
-      user_attributes = params_for(:user, email: nil)
+      user_attributes = params_for(:user_signup, email: nil)
 
       assert {:error, %Ecto.Changeset{}} = Auth.create_user(user_attributes)
     end
