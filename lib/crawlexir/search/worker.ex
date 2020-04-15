@@ -4,6 +4,7 @@ defmodule Crawlexir.Search.Worker do
     max_attempts: 3
 
   alias Crawlexir.Search
+  alias Crawlexir.Search.Keyword
   alias Crawlexir.Google.{ResultPage, Scraper}
 
   @impl Oban.Worker
@@ -12,7 +13,7 @@ defmodule Crawlexir.Search.Worker do
     |> perform_keyword_scraping()
   end
 
-  defp perform_keyword_scraping(keyword) do
+  defp perform_keyword_scraping(%Keyword{} = keyword) do
     with {:ok, _} <- update_keyword_status(keyword, :in_progress),
          {:ok, %ResultPage{} = result_page} <- Scraper.scrap(keyword.keyword),
          {:ok, _} = create_report(keyword, result_page) do
