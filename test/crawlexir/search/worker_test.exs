@@ -16,7 +16,7 @@ defmodule Crawlexir.Search.WorkerTest do
       assert %Search.Report{} = Search.get_keyword_report!(keyword.id)
     end
 
-    test "mark the keyword as completed upon success" do
+    test "marks the keyword as completed upon success" do
       keyword = insert(:keyword_with_user)
       job_attributes = %{keyword_id: keyword.id}
 
@@ -37,7 +37,7 @@ defmodule Crawlexir.Search.WorkerTest do
       assert %{success: 0, failure: 1} == Oban.drain_queue(:default)
     end
 
-    test "mark the keyword as completed upon failure" do
+    test "marks the keyword as completed upon failure" do
       keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
       job_attributes = %{keyword_id: keyword.id}
 
