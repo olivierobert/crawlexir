@@ -6,7 +6,7 @@ defmodule CrawlexirWeb.Plugs.SetCurrentUser do
   def init(opts), do: opts
 
   @doc """
-  Prevent authenticated users to access auth pages
+  Assign current_user and user sign in status to `conn`
   """
   def call(conn, _opts) do
     conn
