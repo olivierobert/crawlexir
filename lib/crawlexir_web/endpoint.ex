@@ -9,7 +9,7 @@ defmodule CrawlexirWeb.Endpoint do
     key: "_crawlexir_key",
     signing_salt: "nogekw81",
     # 1 day expiration
-    max_age: 24*60*60
+    max_age: 24 * 60 * 60
   ]
 
   socket "/socket", CrawlexirWeb.UserSocket,
