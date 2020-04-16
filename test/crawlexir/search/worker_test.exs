@@ -1,26 +1,26 @@
-defmodule Crawlexir.Search.ScraperWorkerTest do
+defmodule Crawlexir.Search.WorkerTest do
   use Crawlexir.DataCase, async: true
   use Oban.Testing, repo: Crawlexir.Repo
 
   alias Crawlexir.Search
-  alias Crawlexir.Search.ScraperWorker
+  alias Crawlexir.Search.Worker
 
-  describe "perform" do
-    test "perform/1 creates a report" do
+  describe "perform/2" do
+    test "creates a report" do
       keyword = insert(:keyword_with_user)
       job_attributes = %{keyword_id: keyword.id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      Worker.new(job_attributes) |> Oban.insert()
 
       assert %{success: 1, failure: 0} == Oban.drain_queue(:default)
       assert %Search.Report{} = Search.get_keyword_report!(keyword.id)
     end
 
-    test "perform/1 update the keyword upon success" do
+    test "marks the keyword as completed upon success" do
       keyword = insert(:keyword_with_user)
       job_attributes = %{keyword_id: keyword.id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      Worker.new(job_attributes) |> Oban.insert()
 
       Oban.drain_queue(:default)
 
@@ -28,20 +28,35 @@ defmodule Crawlexir.Search.ScraperWorkerTest do
       assert Search.get_keyword(keyword.id).status == :completed
     end
 
-    test "perform/1 returns an error upon scraping error" do
-      keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
-      job_attributes = %{keyword_id: keyword.id}
+    test "returns an error if the keyword does not exist" do
+      non_existing_id = 1
+      job_attributes = %{keyword_id: non_existing_id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      {:ok, job} = Worker.new(job_attributes) |> Oban.insert()
 
       assert %{success: 0, failure: 1} == Oban.drain_queue(:default)
+
+      job_error = Repo.get(Oban.Job, job.id).errors |> List.first()
+      assert job_error["error"] =~ "error: :invalid_keyword_id"
     end
 
-    test "perform/1 update the keyword upon failure" do
+    test "returns an error upon a scraping error" do
       keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
       job_attributes = %{keyword_id: keyword.id}
 
-      ScraperWorker.new(job_attributes) |> Oban.insert()
+      {:ok, job} = Worker.new(job_attributes) |> Oban.insert()
+
+      assert %{success: 0, failure: 1} == Oban.drain_queue(:default)
+
+      job_error = Repo.get(Oban.Job, job.id).errors |> List.first()
+      assert job_error["error"] =~ "Search page cannot be scraped"
+    end
+
+    test "marks the keyword as completed upon failure" do
+      keyword = insert(:keyword_with_user, %{keyword: "keyword error"})
+      job_attributes = %{keyword_id: keyword.id}
+
+      Worker.new(job_attributes) |> Oban.insert()
 
       Oban.drain_queue(:default)
 

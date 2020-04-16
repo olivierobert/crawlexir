@@ -3,7 +3,7 @@ defmodule Crawlexir.SearchTest do
   use Oban.Testing, repo: Crawlexir.Repo
 
   alias Crawlexir.Search
-  alias Crawlexir.Search.{Keyword, Report, ScraperWorker}
+  alias Crawlexir.Search.{Keyword, Report, Worker}
 
   describe "list_keywords/0" do
     test "returns all keywords" do
@@ -96,7 +96,7 @@ defmodule Crawlexir.SearchTest do
       assert {:ok, %{keyword: keyword, worker: _job}} =
                Search.search_for_keyword(user, keyword_attributes)
 
-      assert_enqueued(worker: ScraperWorker, args: %{keyword_id: keyword.id})
+      assert_enqueued(worker: Worker, args: %{keyword_id: keyword.id})
     end
   end
 

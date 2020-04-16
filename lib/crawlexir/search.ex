@@ -9,7 +9,7 @@ defmodule Crawlexir.Search do
   alias Crawlexir.Search.Csv
   alias Crawlexir.Search.Keyword
   alias Crawlexir.Search.Report
-  alias Crawlexir.Search.ScraperWorker
+  alias Crawlexir.Search.Worker
 
   alias Crawlexir.Auth.User
 
@@ -111,14 +111,14 @@ defmodule Crawlexir.Search do
     Ecto.Multi.new()
     |> Ecto.Multi.run(:keyword, fn _, _ -> create_keyword(user, attrs) end)
     |> Ecto.Multi.run(:worker, fn _, %{keyword: keyword} ->
-      create_scrap_worker_job(keyword.id)
+      create_worker_job(keyword.id)
     end)
     |> Repo.transaction()
   end
 
-  defp create_scrap_worker_job(keyword_id) do
+  defp create_worker_job(keyword_id) do
     %{keyword_id: keyword_id}
-    |> ScraperWorker.new()
+    |> Worker.new()
     |> Oban.insert()
   end
 
@@ -180,10 +180,10 @@ defmodule Crawlexir.Search do
 
   ## Examples
 
-      iex> create_keyword_report(%Keyword{}, %{field: value})
-      {:ok, %Keyword{}}
+      iex> create_keyword_report(%Report{}, %{field: value})
+      {:ok, %Report{}}
 
-      iex> create_keyword((%Keyword{}, %{field: bad_value})
+      iex> create_keyword_report((%Report{}, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """

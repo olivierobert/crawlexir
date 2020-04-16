@@ -1,5 +1,5 @@
-defmodule Crawlexir.Search.Scraper do
-  alias Crawlexir.Search.ResultPage
+defmodule Crawlexir.Google.Scraper do
+  alias Crawlexir.Google.ResultPage
 
   @browser_user_agent [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
@@ -15,13 +15,13 @@ defmodule Crawlexir.Search.Scraper do
 
   ## Examples
 
-      iex> get("project management apps")
+      iex> scrap("project management apps")
       {:ok, %ResultPage{}}
 
-      iex> get("invalid search")
-      {:error, "Search page cannot be fetched (:nxdomain)"}
+      iex> scrap("invalid search")
+      {:error, "Search page cannot be scraped (:nxdomain)"}
   """
-  def get(keyword) do
+  def scrap(keyword) do
     headers = ["User-Agent": rotated_user_agent()]
 
     case request().get(keyword, headers) do
@@ -29,7 +29,7 @@ defmodule Crawlexir.Search.Scraper do
         ResultPage.parse(body)
 
       {:error, reason} ->
-        {:error, "Search page cannot be fetched (#{reason})"}
+        {:error, "Search page cannot be scraped (#{reason})"}
     end
   end
 
