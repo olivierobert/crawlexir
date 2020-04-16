@@ -20,7 +20,8 @@ defmodule Crawlexir.Search.Worker do
 
   @impl Oban.Worker
   def perform(%{"keyword_id" => keyword_id}, _job) do
-    Search.get_keyword(keyword_id)
+    keyword_id
+    |> Search.get_keyword()
     |> perform_keyword_scraping()
   end
 
