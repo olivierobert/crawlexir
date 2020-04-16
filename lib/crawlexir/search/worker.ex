@@ -29,7 +29,8 @@ defmodule Crawlexir.Search.Worker do
     with {:ok, _} <- update_keyword_status(keyword, :in_progress),
          {:ok, %ResultPage{} = result_page} <- Scraper.scrap(keyword.keyword),
          {:ok, _} = create_report(keyword, result_page) do
-      {:ok, _} = update_keyword_status(keyword, :completed)
+      update_keyword_status(keyword, :completed)
+
       :ok
     else
       {:error, reason} ->
